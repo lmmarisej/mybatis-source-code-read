@@ -15,13 +15,9 @@
  */
 package org.apache.ibatis.annotations;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import org.apache.ibatis.scripting.LanguageDriver;
+
+import java.lang.annotation.*;
 
 /**
  * The annotation that specify a {@link LanguageDriver} to use.
@@ -43,10 +39,10 @@ import org.apache.ibatis.scripting.LanguageDriver;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Lang {
-  /**
-   * Returns the {@link LanguageDriver} implementation type to use.
-   *
-   * @return the {@link LanguageDriver} implementation type
-   */
-  Class<? extends LanguageDriver> value();
+    /**
+     * Returns the {@link LanguageDriver} implementation type to use.
+     *
+     * @return the {@link LanguageDriver} implementation type
+     */
+    Class<? extends LanguageDriver> value();
 }

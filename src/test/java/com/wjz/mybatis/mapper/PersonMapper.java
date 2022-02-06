@@ -4,5 +4,5 @@ import com.wjz.mybatis.pojo.Person;
 
 public interface PersonMapper {
 
-	Person selectById(Long id);
+    Person selectById(Long id);
 }

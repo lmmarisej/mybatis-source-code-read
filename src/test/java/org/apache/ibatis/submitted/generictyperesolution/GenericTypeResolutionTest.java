@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.submitted.generictyperesolution;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -27,45 +23,50 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.Reader;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 class GenericTypeResolutionTest {
 
-  private static SqlSessionFactory sqlSessionFactory;
+    private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeAll
-  static void setUp() throws Exception {
-    // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/generictyperesolution/mybatis-config.xml")) {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    @BeforeAll
+    static void setUp() throws Exception {
+        // create an SqlSessionFactory
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/generictyperesolution/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
+
+        // populate in-memory database
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/generictyperesolution/CreateDB.sql");
     }
 
-    // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/generictyperesolution/CreateDB.sql");
-  }
-
-  @Test
-  void shouldGetAUser() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User criteria = new User();
-      criteria.setId(1);
-      User result = mapper.getUser(criteria);
-      assertEquals("User1", result.getName());
-      assertEquals(Integer.valueOf(12), result.getFld1());
+    @Test
+    void shouldGetAUser() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            User criteria = new User();
+            criteria.setId(1);
+            User result = mapper.getUser(criteria);
+            assertEquals("User1", result.getName());
+            assertEquals(Integer.valueOf(12), result.getFld1());
+        }
     }
-  }
 
-  @Test
-  void shouldInsertAUser() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = new User();
-      user.setName("User2");
-      user.fld2 = 56;
-      mapper.insertUser(user);
-      User result = mapper.getUserByName("User2");
-      assertNotNull(result);
+    @Test
+    void shouldInsertAUser() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            User user = new User();
+            user.setName("User2");
+            user.fld2 = 56;
+            mapper.insertUser(user);
+            User result = mapper.getUserByName("User2");
+            assertNotNull(result);
+        }
     }
-  }
 
 }

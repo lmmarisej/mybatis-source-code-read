@@ -22,11 +22,11 @@ import org.junit.jupiter.api.Test;
 
 class IncludePropertyErrorTest {
 
-  @Test
-  void shouldFailForDuplicatedPropertyNames() {
-    Configuration configuration = new Configuration();
-    Assertions.assertThrows(PersistenceException.class,
-        () -> configuration.addMapper(DuplicatedIncludePropertiesMapper.class));
-  }
+    @Test
+    void shouldFailForDuplicatedPropertyNames() {
+        Configuration configuration = new Configuration();
+        Assertions.assertThrows(PersistenceException.class,
+                () -> configuration.addMapper(DuplicatedIncludePropertiesMapper.class));
+    }
 
 }

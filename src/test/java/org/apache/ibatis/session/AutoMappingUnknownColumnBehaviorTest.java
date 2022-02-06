@@ -15,12 +15,6 @@
  */
 package org.apache.ibatis.session;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.sql.DataSource;
-
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import org.apache.ibatis.BaseDataTest;
@@ -33,11 +27,16 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import javax.sql.DataSource;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Tests for specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
  *
- * @since 3.4.0
  * @author Kazuki Shimizu
+ * @since 3.4.0
  */
 class AutoMappingUnknownColumnBehaviorTest {
 
@@ -86,7 +85,7 @@ class AutoMappingUnknownColumnBehaviorTest {
 
         @Override
         protected void append(ILoggingEvent event) {
-          lastEvent = event;
+            lastEvent = event;
         }
     }
 

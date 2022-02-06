@@ -19,27 +19,27 @@
 <!DOCTYPE configuration>
 <configuration>
 
-  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
-    </encoder>
-  </appender>
-  <appender name="lastEventSavedAppender"
-            class="org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$LastEventSavedAppender"/>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="lastEventSavedAppender"
+              class="org.apache.ibatis.session.AutoMappingUnknownColumnBehaviorTest$LastEventSavedAppender"/>
 
-  <logger name="org.apache.ibatis">
-    <level value="error"/>
-  </logger>
-  <logger name="org.apache.ibatis.logging">
-    <level value="debug"/>
-  </logger>
-  <logger name="org.apache.ibatis.session.AutoMappingUnknownColumnBehavior">
-    <level value="warn"/>
-    <appender-ref ref="lastEventSavedAppender"/>
-  </logger>
+    <logger name="org.apache.ibatis">
+        <level value="error"/>
+    </logger>
+    <logger name="org.apache.ibatis.logging">
+        <level value="debug"/>
+    </logger>
+    <logger name="org.apache.ibatis.session.AutoMappingUnknownColumnBehavior">
+        <level value="warn"/>
+        <appender-ref ref="lastEventSavedAppender"/>
+    </logger>
 
-  <root level="error">
-    <appender-ref ref="stdout"/>
-  </root>
+    <root level="error">
+        <appender-ref ref="stdout"/>
+    </root>
 
 </configuration>

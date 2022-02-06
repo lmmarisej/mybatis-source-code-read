@@ -16,20 +16,20 @@
 package org.apache.ibatis.reflection.typeparam;
 
 public class Calculator<T> {
-  protected T id;
+    protected T id;
 
-  private T fld;
+    private T fld;
 
-  protected T attribute;
+    protected T attribute;
 
-  public T getId() {
-    return id;
-  }
+    public T getId() {
+        return id;
+    }
 
-  public void setId(T id) {
-    this.id = id;
-  }
+    public void setId(T id) {
+        this.id = id;
+    }
 
-  public static class SubCalculator extends Calculator<String> {
-  }
+    public static class SubCalculator extends Calculator<String> {
+    }
 }

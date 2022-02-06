@@ -20,11 +20,11 @@ import java.util.List;
 
 public interface ProductMapper {
 
-  List<Integer> selectProductCodes();
+    List<Integer> selectProductCodes();
 
-  List<Long> selectProductCodesL();
+    List<Long> selectProductCodesL();
 
-  List<BigDecimal> selectProductCodesB();
+    List<BigDecimal> selectProductCodesB();
 
-  List<Product> selectAllProducts();
+    List<Product> selectAllProducts();
 }

@@ -6,22 +6,22 @@ import java.lang.reflect.Proxy;
 
 public class CustomInvokerHandler implements InvocationHandler {
 
-	private Object target;
+    private Object target;
 
-	public CustomInvokerHandler(Object target) {
-		this.target = target;
-	}
+    public CustomInvokerHandler(Object target) {
+        this.target = target;
+    }
 
-	public Object getProxy() {
-		return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), target.getClass().getInterfaces(),
-				this);
-	}
+    public Object getProxy() {
+        return Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), target.getClass().getInterfaces(),
+                this);
+    }
 
-	@Override
-	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		System.out.println(proxy.getClass().getName());
-		System.out.println("前置处理");
-		return method.invoke(target, args);
-	}
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        System.out.println(proxy.getClass().getName());
+        System.out.println("前置处理");
+        return method.invoke(target, args);
+    }
 
 }

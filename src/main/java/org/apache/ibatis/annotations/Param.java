@@ -15,11 +15,7 @@
  */
 package org.apache.ibatis.annotations;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * The annotation that specify the parameter name.
@@ -40,10 +36,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
 public @interface Param {
-  /**
-   * Returns the parameter name.
-   *
-   * @return the parameter name
-   */
-  String value();
+    /**
+     * Returns the parameter name.
+     *
+     * @return the parameter name
+     */
+    String value();
 }

@@ -19,6 +19,6 @@ import org.apache.ibatis.annotations.Param;
 
 public interface ImmutablePOJOMapper {
 
-  ImmutablePOJO getImmutablePOJO(@Param("pojoID") Integer pojoID);
+    ImmutablePOJO getImmutablePOJO(@Param("pojoID") Integer pojoID);
 
 }

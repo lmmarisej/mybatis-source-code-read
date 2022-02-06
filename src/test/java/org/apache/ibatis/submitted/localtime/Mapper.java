@@ -20,10 +20,10 @@ import org.apache.ibatis.annotations.Select;
 
 public interface Mapper {
 
-  @Select("select id, t from records where id = #{id}")
-  Record selectById(Integer id);
+    @Select("select id, t from records where id = #{id}")
+    Record selectById(Integer id);
 
-  @Insert("insert into records (id, t) values (#{id}, #{t})")
-  int insertLocalTime(Record record);
+    @Insert("insert into records (id, t) values (#{id}, #{t})")
+    int insertLocalTime(Record record);
 
 }

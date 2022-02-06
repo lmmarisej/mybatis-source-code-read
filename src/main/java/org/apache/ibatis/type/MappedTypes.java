@@ -15,11 +15,7 @@
  */
 package org.apache.ibatis.type;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * The annotation that specify java types to map {@link TypeHandler}.
@@ -32,16 +28,17 @@ import java.lang.annotation.Target;
  *   // ...
  * }
  * </pre>
+ *
  * @author Eduardo Macarron
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface MappedTypes {
-  /**
-   * Returns java types to map {@link TypeHandler}.
-   *
-   * @return java types
-   */
-  Class<?>[] value();
+    /**
+     * Returns java types to map {@link TypeHandler}.
+     *
+     * @return java types
+     */
+    Class<?>[] value();
 }

@@ -18,67 +18,67 @@ package org.apache.ibatis.submitted.annotion_many_one_add_columnprefix;
 import java.util.List;
 
 public class User {
-  private Integer id;
-  private String username;
-  private List<User> teachers;
-  private Role role;
-  private List<Role> roles;
-  private User friend;
+    private Integer id;
+    private String username;
+    private List<User> teachers;
+    private Role role;
+    private List<Role> roles;
+    private User friend;
 
-  public Role getRole() {
-    return role;
-  }
+    public Role getRole() {
+        return role;
+    }
 
-  public void setRole(Role role) {
-    this.role = role;
-  }
+    public void setRole(Role role) {
+        this.role = role;
+    }
 
-  @Override
-  public String toString() {
-    return "User{" +
-        "id=" + id +
-        ", username='" + username + '\'' +
-        ", roles=" + roles +
-        '}';
-  }
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", roles=" + roles +
+                '}';
+    }
 
-  public Integer getId() {
-    return id;
-  }
+    public Integer getId() {
+        return id;
+    }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-  public String getUsername() {
-    return username;
-  }
+    public String getUsername() {
+        return username;
+    }
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-  public List<Role> getRoles() {
-    return roles;
-  }
+    public List<Role> getRoles() {
+        return roles;
+    }
 
-  public void setRoles(List<Role> roles) {
-    this.roles = roles;
-  }
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 
-  public List<User> getTeachers() {
-    return teachers;
-  }
+    public List<User> getTeachers() {
+        return teachers;
+    }
 
-  public void setTeachers(List<User> teachers) {
-    this.teachers = teachers;
-  }
+    public void setTeachers(List<User> teachers) {
+        this.teachers = teachers;
+    }
 
-  public User getFriend() {
-    return friend;
-  }
+    public User getFriend() {
+        return friend;
+    }
 
-  public void setFriend(User friend) {
-    this.friend = friend;
-  }
+    public void setFriend(User friend) {
+        this.friend = friend;
+    }
 }

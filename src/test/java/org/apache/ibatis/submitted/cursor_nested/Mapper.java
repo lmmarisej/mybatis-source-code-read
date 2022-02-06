@@ -19,6 +19,6 @@ import org.apache.ibatis.cursor.Cursor;
 
 public interface Mapper {
 
-  Cursor<User> getAllUsers();
+    Cursor<User> getAllUsers();
 
 }

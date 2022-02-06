@@ -22,10 +22,10 @@ import org.apache.ibatis.submitted.resolution.User;
 
 @CacheNamespaceRef(MapperC.class)
 public interface MapperA {
-  @ResultMap("userRM")
-  @Select("select * from users where id = #{id}")
-  User getUser(Integer id);
+    @ResultMap("userRM")
+    @Select("select * from users where id = #{id}")
+    User getUser(Integer id);
 
-  @Select("select * from users")
-  User getUser2(Integer id);
+    @Select("select * from users")
+    User getUser2(Integer id);
 }

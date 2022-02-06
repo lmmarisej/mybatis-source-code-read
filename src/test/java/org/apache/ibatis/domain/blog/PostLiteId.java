@@ -23,7 +23,7 @@ public class PostLiteId {
     }
 
     public void setId(int id) {
-      this.id = id;
+        this.id = id;
     }
 
     public PostLiteId(int aId) {

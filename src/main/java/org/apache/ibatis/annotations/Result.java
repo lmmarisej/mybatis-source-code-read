@@ -15,81 +15,76 @@
  */
 package org.apache.ibatis.annotations;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
+import java.lang.annotation.*;
+
 /**
  * The annotation that specify a mapping definition for the property.
  *
- * @see Results
  * @author Clinton Begin
+ * @see Results
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 @Repeatable(Results.class)
 public @interface Result {
-  /**
-   * Returns whether id column or not.
-   *
-   * @return {@code true} if id column; {@code false} if otherwise
-   */
-  boolean id() default false;
+    /**
+     * Returns whether id column or not.
+     *
+     * @return {@code true} if id column; {@code false} if otherwise
+     */
+    boolean id() default false;
 
-  /**
-   * Return the column name(or column label) to map to this argument.
-   *
-   * @return the column name(or column label)
-   */
-  String column() default "";
+    /**
+     * Return the column name(or column label) to map to this argument.
+     *
+     * @return the column name(or column label)
+     */
+    String column() default "";
 
-  /**
-   * Returns the property name for applying this mapping.
-   *
-   * @return the property name
-   */
-  String property() default "";
+    /**
+     * Returns the property name for applying this mapping.
+     *
+     * @return the property name
+     */
+    String property() default "";
 
-  /**
-   * Return the java type for this argument.
-   *
-   * @return the java type
-   */
-  Class<?> javaType() default void.class;
+    /**
+     * Return the java type for this argument.
+     *
+     * @return the java type
+     */
+    Class<?> javaType() default void.class;
 
-  /**
-   * Return the jdbc type for column that map to this argument.
-   *
-   * @return the jdbc type
-   */
-  JdbcType jdbcType() default JdbcType.UNDEFINED;
+    /**
+     * Return the jdbc type for column that map to this argument.
+     *
+     * @return the jdbc type
+     */
+    JdbcType jdbcType() default JdbcType.UNDEFINED;
 
-  /**
-   * Returns the {@link TypeHandler} type for retrieving a column value from result set.
-   *
-   * @return the {@link TypeHandler} type
-   */
-  Class<? extends TypeHandler> typeHandler() default UnknownTypeHandler.class;
+    /**
+     * Returns the {@link TypeHandler} type for retrieving a column value from result set.
+     *
+     * @return the {@link TypeHandler} type
+     */
+    Class<? extends TypeHandler> typeHandler() default UnknownTypeHandler.class;
 
-  /**
-   * Returns the mapping definition for single relationship.
-   *
-   * @return the mapping definition for single relationship
-   */
-  One one() default @One;
+    /**
+     * Returns the mapping definition for single relationship.
+     *
+     * @return the mapping definition for single relationship
+     */
+    One one() default @One;
 
-  /**
-   * Returns the mapping definition for collection relationship.
-   *
-   * @return the mapping definition for collection relationship
-   */
-  Many many() default @Many;
+    /**
+     * Returns the mapping definition for collection relationship.
+     *
+     * @return the mapping definition for collection relationship
+     */
+    Many many() default @Many;
 }

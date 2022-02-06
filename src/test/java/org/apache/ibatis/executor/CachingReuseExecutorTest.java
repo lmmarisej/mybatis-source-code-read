@@ -20,13 +20,13 @@ import org.junit.jupiter.api.Test;
 
 class CachingReuseExecutorTest extends BaseExecutorTest {
 
-  @Test
-  void dummy() {
-  }
+    @Test
+    void dummy() {
+    }
 
-  @Override
-  protected Executor createExecutor(Transaction transaction) {
-    return new CachingExecutor(new ReuseExecutor(config, transaction));
-  }
+    @Override
+    protected Executor createExecutor(Transaction transaction) {
+        return new CachingExecutor(new ReuseExecutor(config, transaction));
+    }
 
 }

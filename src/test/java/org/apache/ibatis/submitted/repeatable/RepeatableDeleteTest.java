@@ -29,136 +29,136 @@ import java.sql.SQLException;
 
 class RepeatableDeleteTest {
 
-  @Test
-  void hsql() throws IOException, SQLException {
-    SqlSessionFactory sqlSessionFactory;
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-hsql");
+    @Test
+    void hsql() throws IOException, SQLException {
+        SqlSessionFactory sqlSessionFactory;
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-hsql");
+        }
+
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
+
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+
+            int count = mapper.count();
+            int targetCount = mapper.countByCurrentDatabase("HSQL");
+            mapper.delete();
+
+            Assertions.assertEquals(count - targetCount, mapper.count());
+            Assertions.assertEquals(0, mapper.countByCurrentDatabase("HSQL"));
+        }
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
+    @Test
+    void hsqlUsingProvider() throws IOException, SQLException {
+        SqlSessionFactory sqlSessionFactory;
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-hsql");
+        }
 
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
 
-      int count = mapper.count();
-      int targetCount = mapper.countByCurrentDatabase("HSQL");
-      mapper.delete();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("HSQL"));
-    }
-  }
+            int count = mapper.count();
+            int targetCount = mapper.countByCurrentDatabase("HSQL");
+            mapper.deleteUsingProvider();
 
-  @Test
-  void hsqlUsingProvider() throws IOException, SQLException {
-    SqlSessionFactory sqlSessionFactory;
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-hsql");
-    }
-
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
-
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-
-      int count = mapper.count();
-      int targetCount = mapper.countByCurrentDatabase("HSQL");
-      mapper.deleteUsingProvider();
-
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("HSQL"));
-    }
-  }
-
-  @Test
-  void derby() throws IOException, SQLException {
-    SqlSessionFactory sqlSessionFactory;
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
+            Assertions.assertEquals(count - targetCount, mapper.count());
+            Assertions.assertEquals(0, mapper.countByCurrentDatabase("HSQL"));
+        }
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
+    @Test
+    void derby() throws IOException, SQLException {
+        SqlSessionFactory sqlSessionFactory;
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
+        }
 
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
 
-      int count = mapper.count();
-      int targetCount = mapper.countByCurrentDatabase("DERBY");
-      mapper.delete();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("DERBY"));
-    }
-  }
+            int count = mapper.count();
+            int targetCount = mapper.countByCurrentDatabase("DERBY");
+            mapper.delete();
 
-  @Test
-  void derbyUsingProvider() throws IOException, SQLException {
-    SqlSessionFactory sqlSessionFactory;
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
-    }
-
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
-
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-
-      int count = mapper.count();
-      int targetCount = mapper.countByCurrentDatabase("DERBY");
-      mapper.deleteUsingProvider();
-
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("DERBY"));
-    }
-  }
-
-  @Test
-  void h2() throws IOException, SQLException {
-    SqlSessionFactory sqlSessionFactory;
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-h2");
+            Assertions.assertEquals(count - targetCount, mapper.count());
+            Assertions.assertEquals(0, mapper.countByCurrentDatabase("DERBY"));
+        }
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
+    @Test
+    void derbyUsingProvider() throws IOException, SQLException {
+        SqlSessionFactory sqlSessionFactory;
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-derby");
+        }
 
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
 
-      int count = mapper.count();
-      int targetCount = mapper.countByCurrentDatabase("DEFAULT");
-      mapper.delete();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("DEFAULT"));
+            int count = mapper.count();
+            int targetCount = mapper.countByCurrentDatabase("DERBY");
+            mapper.deleteUsingProvider();
+
+            Assertions.assertEquals(count - targetCount, mapper.count());
+            Assertions.assertEquals(0, mapper.countByCurrentDatabase("DERBY"));
+        }
     }
-  }
 
-  @Test
-  void h2UsingProvider() throws IOException, SQLException {
-    SqlSessionFactory sqlSessionFactory;
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-h2");
+    @Test
+    void h2() throws IOException, SQLException {
+        SqlSessionFactory sqlSessionFactory;
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-h2");
+        }
+
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
+
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+
+            int count = mapper.count();
+            int targetCount = mapper.countByCurrentDatabase("DEFAULT");
+            mapper.delete();
+
+            Assertions.assertEquals(count - targetCount, mapper.count());
+            Assertions.assertEquals(0, mapper.countByCurrentDatabase("DEFAULT"));
+        }
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
+    @Test
+    void h2UsingProvider() throws IOException, SQLException {
+        SqlSessionFactory sqlSessionFactory;
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/repeatable/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, "development-h2");
+        }
 
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/repeatable/CreateDB.sql");
 
-      int count = mapper.count();
-      int targetCount = mapper.countByCurrentDatabase("DEFAULT");
-      mapper.deleteUsingProvider();
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
 
-      Assertions.assertEquals(count - targetCount , mapper.count());
-      Assertions.assertEquals(0 , mapper.countByCurrentDatabase("DEFAULT"));
+            int count = mapper.count();
+            int targetCount = mapper.countByCurrentDatabase("DEFAULT");
+            mapper.deleteUsingProvider();
+
+            Assertions.assertEquals(count - targetCount, mapper.count());
+            Assertions.assertEquals(0, mapper.countByCurrentDatabase("DEFAULT"));
+        }
     }
-  }
 
 }

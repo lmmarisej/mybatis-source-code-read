@@ -20,7 +20,7 @@ import org.apache.ibatis.cursor.Cursor;
 
 public interface AnnotationMapper {
 
-  @Select("select * from users order by id")
-  Cursor<User> getAllUsers();
+    @Select("select * from users order by id")
+    Cursor<User> getAllUsers();
 
 }

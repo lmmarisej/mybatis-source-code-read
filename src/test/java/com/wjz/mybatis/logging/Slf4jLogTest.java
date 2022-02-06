@@ -11,21 +11,21 @@ import org.slf4j.MarkerFactory;
 import org.slf4j.spi.LocationAwareLogger;
 
 public class Slf4jLogTest {
-	
-	private final Marker MARKER = MarkerFactory.getMarker("BINGJJFLY");
 
-	@Test
-	public void api() {
-		Logger log = LoggerFactory.getLogger(Slf4jLogTest.class);
-		Assert.assertEquals(true, log instanceof LocationAwareLogger);
-		LocationAwareLogger logger = (LocationAwareLogger) log;
-		logger.log(MARKER, Slf4jLogTest.class.getName(), LocationAwareLogger.INFO_INT, "hello WORLD.", null, null);
-		log.info("hello slf4j.");
-	}
-	
-	@Test
-	public void log() {
-		Log log = LogFactory.getLog(Slf4jLogTest.class);
-		System.out.println(log.getClass());
-	}
+    private final Marker MARKER = MarkerFactory.getMarker("BINGJJFLY");
+
+    @Test
+    public void api() {
+        Logger log = LoggerFactory.getLogger(Slf4jLogTest.class);
+        Assert.assertEquals(true, log instanceof LocationAwareLogger);
+        LocationAwareLogger logger = (LocationAwareLogger) log;
+        logger.log(MARKER, Slf4jLogTest.class.getName(), LocationAwareLogger.INFO_INT, "hello WORLD.", null, null);
+        log.info("hello slf4j.");
+    }
+
+    @Test
+    public void log() {
+        Log log = LogFactory.getLog(Slf4jLogTest.class);
+        System.out.println(log.getClass());
+    }
 }

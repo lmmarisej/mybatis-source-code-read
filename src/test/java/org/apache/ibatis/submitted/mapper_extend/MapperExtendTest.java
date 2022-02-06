@@ -15,11 +15,6 @@
  */
 package org.apache.ibatis.submitted.mapper_extend;
 
-import static com.googlecode.catchexception.apis.BDDCatchException.*;
-import static org.assertj.core.api.BDDAssertions.then;
-
-import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.binding.BindingException;
 import org.apache.ibatis.io.Resources;
@@ -30,75 +25,81 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.Reader;
+
+import static com.googlecode.catchexception.apis.BDDCatchException.caughtException;
+import static com.googlecode.catchexception.apis.BDDCatchException.when;
+import static org.assertj.core.api.BDDAssertions.then;
+
 class MapperExtendTest {
 
-  private static SqlSessionFactory sqlSessionFactory;
+    private static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeAll
-  static void setUp() throws Exception {
-    // create an SqlSessionFactory
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/mapper_extend/mybatis-config.xml")) {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    @BeforeAll
+    static void setUp() throws Exception {
+        // create an SqlSessionFactory
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/mapper_extend/mybatis-config.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
+
+        // populate in-memory database
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/mapper_extend/CreateDB.sql");
     }
 
-    // populate in-memory database
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-        "org/apache/ibatis/submitted/mapper_extend/CreateDB.sql");
-  }
-
-  @Test
-  void shouldGetAUserWithAnExtendedXMLMethod() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      ParentMapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.getUserXML();
-      Assertions.assertEquals("User1", user.getName());
+    @Test
+    void shouldGetAUserWithAnExtendedXMLMethod() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            ParentMapper mapper = sqlSession.getMapper(Mapper.class);
+            User user = mapper.getUserXML();
+            Assertions.assertEquals("User1", user.getName());
+        }
     }
-  }
 
-  @Test
-  void shouldGetAUserWithAnExtendedAnnotatedMethod() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      ParentMapper mapper = sqlSession.getMapper(Mapper.class);
-      User user = mapper.getUserAnnotated();
-      Assertions.assertEquals("User1", user.getName());
+    @Test
+    void shouldGetAUserWithAnExtendedAnnotatedMethod() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            ParentMapper mapper = sqlSession.getMapper(Mapper.class);
+            User user = mapper.getUserAnnotated();
+            Assertions.assertEquals("User1", user.getName());
+        }
     }
-  }
 
-  @Test
-  void shouldGetAUserWithAnOverloadedXMLMethod() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      ParentMapper mapper = sqlSession.getMapper(MapperOverload.class);
-      User user = mapper.getUserXML();
-      Assertions.assertEquals("User2", user.getName());
+    @Test
+    void shouldGetAUserWithAnOverloadedXMLMethod() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            ParentMapper mapper = sqlSession.getMapper(MapperOverload.class);
+            User user = mapper.getUserXML();
+            Assertions.assertEquals("User2", user.getName());
+        }
     }
-  }
 
-  @Test
-  void shouldGetAUserWithAnOverloadedAnnotatedMethod() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      ParentMapper mapper = sqlSession.getMapper(MapperOverload.class);
-      User user = mapper.getUserAnnotated();
-      Assertions.assertEquals("User2", user.getName());
+    @Test
+    void shouldGetAUserWithAnOverloadedAnnotatedMethod() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            ParentMapper mapper = sqlSession.getMapper(MapperOverload.class);
+            User user = mapper.getUserAnnotated();
+            Assertions.assertEquals("User2", user.getName());
+        }
     }
-  }
 
-  @Test
-  void shouldFindStatementInSubInterfaceOfDeclaringClass() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      ChildMapper mapper = sqlSession.getMapper(ChildMapper.class);
-      User user = mapper.getUserByName("User1");
-      Assertions.assertNotNull(user);
+    @Test
+    void shouldFindStatementInSubInterfaceOfDeclaringClass() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            ChildMapper mapper = sqlSession.getMapper(ChildMapper.class);
+            User user = mapper.getUserByName("User1");
+            Assertions.assertNotNull(user);
+        }
     }
-  }
 
-  @Test
-  void shouldThrowExceptionIfNoMatchingStatementFound() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      Mapper mapper = sqlSession.getMapper(Mapper.class);
-      when(mapper::noMappedStatement);
-      then(caughtException()).isInstanceOf(BindingException.class)
-        .hasMessage("Invalid bound statement (not found): "
-          + Mapper.class.getName() + ".noMappedStatement");
+    @Test
+    void shouldThrowExceptionIfNoMatchingStatementFound() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            Mapper mapper = sqlSession.getMapper(Mapper.class);
+            when(mapper::noMappedStatement);
+            then(caughtException()).isInstanceOf(BindingException.class)
+                    .hasMessage("Invalid bound statement (not found): "
+                            + Mapper.class.getName() + ".noMappedStatement");
+        }
     }
-  }
 }

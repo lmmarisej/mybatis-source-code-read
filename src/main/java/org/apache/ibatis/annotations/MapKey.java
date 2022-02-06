@@ -15,11 +15,7 @@
  */
 package org.apache.ibatis.annotations;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * The annotation that specify the property name(or column name) for a key value of {@link java.util.Map}.
@@ -41,10 +37,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface MapKey {
-  /**
-   * Returns the property name(or column name) for a key value of {@link java.util.Map}.
-   *
-   * @return the property name(or column name)
-   */
-  String value();
+    /**
+     * Returns the property name(or column name) for a key value of {@link java.util.Map}.
+     *
+     * @return the property name(or column name)
+     */
+    String value();
 }

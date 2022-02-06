@@ -15,11 +15,7 @@
  */
 package org.apache.ibatis.type;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * The annotation that specify jdbc types to map {@link TypeHandler}.
@@ -32,23 +28,24 @@ import java.lang.annotation.Target;
  *   // ...
  * }
  * </pre>
+ *
  * @author Eduardo Macarron
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface MappedJdbcTypes {
-  /**
-   * Returns jdbc types to map {@link TypeHandler}.
-   *
-   * @return jdbc types
-   */
-  JdbcType[] value();
+    /**
+     * Returns jdbc types to map {@link TypeHandler}.
+     *
+     * @return jdbc types
+     */
+    JdbcType[] value();
 
-  /**
-   * Returns whether map to jdbc null type.
-   *
-   * @return {@code true} if map, {@code false} if otherwise
-   */
-  boolean includeNullJdbcType() default false;
+    /**
+     * Returns whether map to jdbc null type.
+     *
+     * @return {@code true} if map, {@code false} if otherwise
+     */
+    boolean includeNullJdbcType() default false;
 }

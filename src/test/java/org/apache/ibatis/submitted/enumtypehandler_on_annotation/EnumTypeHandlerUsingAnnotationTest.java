@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.submitted.enumtypehandler_on_annotation;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -29,16 +25,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.Reader;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Tests for type handler of enum using annotations.
  *
- * @since #444
- *
  * @author Kazuki Shimizu
- *
  * @see org.apache.ibatis.annotations.Arg
  * @see org.apache.ibatis.annotations.Result
  * @see org.apache.ibatis.annotations.TypeDiscriminator
+ * @since #444
  */
 class EnumTypeHandlerUsingAnnotationTest {
 

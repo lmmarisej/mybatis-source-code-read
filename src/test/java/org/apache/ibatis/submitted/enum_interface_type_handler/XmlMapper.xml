@@ -24,7 +24,8 @@
 
     <!-- without parameterType attribute -->
     <insert id="insertUser">
-        insert into users (id, color) values (#{id}, #{color})
+        insert into users (id, color)
+        values (#{id}, #{color})
     </insert>
 
 </mapper>

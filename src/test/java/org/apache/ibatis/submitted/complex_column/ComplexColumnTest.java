@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.submitted.complex_column;
 
-import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -25,6 +23,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.io.Reader;
 
 class ComplexColumnTest {
 
@@ -102,20 +102,20 @@ class ComplexColumnTest {
 
     @Test
     void testWithComplex4() {
-      try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-          PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
-          Person criteria = new Person();
-          criteria.setFirstName("Christian");
-          criteria.setLastName("Poitras");
-          Person person = personMapper.getParentWithComplex(criteria);
-          Assertions.assertNotNull(person, "person must not be null");
-          Assertions.assertEquals("Christian", person.getFirstName());
-          Assertions.assertEquals("Poitras", person.getLastName());
-          Person parent = person.getParent();
-          Assertions.assertNotNull(parent, "parent must not be null");
-          Assertions.assertEquals("John", parent.getFirstName());
-          Assertions.assertEquals("Smith", parent.getLastName());
-      }
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
+            Person criteria = new Person();
+            criteria.setFirstName("Christian");
+            criteria.setLastName("Poitras");
+            Person person = personMapper.getParentWithComplex(criteria);
+            Assertions.assertNotNull(person, "person must not be null");
+            Assertions.assertEquals("Christian", person.getFirstName());
+            Assertions.assertEquals("Poitras", person.getLastName());
+            Person parent = person.getParent();
+            Assertions.assertNotNull(parent, "parent must not be null");
+            Assertions.assertEquals("John", parent.getFirstName());
+            Assertions.assertEquals("Smith", parent.getLastName());
+        }
     }
 
     @Test

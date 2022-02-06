@@ -4,70 +4,69 @@ import java.lang.reflect.Method;
 
 /**
  * 面向对象，将方法签名封装成对象
- * 
- * @author iss002
  *
+ * @author iss002
  */
 public class MethodSignature {
-	
-	private String name;
-	private Method method;
-	private Class<?> returnType;
-	private Class<?> declaringType;
-	private int modifiers;
 
-	public MethodSignature(Method method) {
-		this.name = method.getName();
-		this.method = method;
-		this.returnType = method.getReturnType();
-		this.declaringType = method.getDeclaringClass();
-		this.modifiers = method.getModifiers();
-	}
+    private String name;
+    private Method method;
+    private Class<?> returnType;
+    private Class<?> declaringType;
+    private int modifiers;
 
-	public String getName() {
-		return name;
-	}
+    public MethodSignature(Method method) {
+        this.name = method.getName();
+        this.method = method;
+        this.returnType = method.getReturnType();
+        this.declaringType = method.getDeclaringClass();
+        this.modifiers = method.getModifiers();
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Method getMethod() {
-		return method;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setMethod(Method method) {
-		this.method = method;
-	}
+    public Method getMethod() {
+        return method;
+    }
 
-	public Class<?> getReturnType() {
-		return returnType;
-	}
+    public void setMethod(Method method) {
+        this.method = method;
+    }
 
-	public void setReturnType(Class<?> returnType) {
-		this.returnType = returnType;
-	}
+    public Class<?> getReturnType() {
+        return returnType;
+    }
 
-	public Class<?> getDeclaringType() {
-		return declaringType;
-	}
+    public void setReturnType(Class<?> returnType) {
+        this.returnType = returnType;
+    }
 
-	public void setDeclaringType(Class<?> declaringType) {
-		this.declaringType = declaringType;
-	}
+    public Class<?> getDeclaringType() {
+        return declaringType;
+    }
 
-	public int getModifiers() {
-		return modifiers;
-	}
+    public void setDeclaringType(Class<?> declaringType) {
+        this.declaringType = declaringType;
+    }
 
-	public void setModifiers(int modifiers) {
-		this.modifiers = modifiers;
-	}
+    public int getModifiers() {
+        return modifiers;
+    }
 
-	@Override
-	public String toString() {
-		return "MethodSignature [name=" + name + ", method=" + method + ", returnType=" + returnType
-				+ ", declaringType=" + declaringType + ", modifiers=" + modifiers + "]";
-	}
-	
+    public void setModifiers(int modifiers) {
+        this.modifiers = modifiers;
+    }
+
+    @Override
+    public String toString() {
+        return "MethodSignature [name=" + name + ", method=" + method + ", returnType=" + returnType
+                + ", declaringType=" + declaringType + ", modifiers=" + modifiers + "]";
+    }
+
 }

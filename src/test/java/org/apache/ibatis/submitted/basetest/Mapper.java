@@ -17,8 +17,8 @@ package org.apache.ibatis.submitted.basetest;
 
 public interface Mapper {
 
-  User getUser(Integer id);
+    User getUser(Integer id);
 
-  void insertUser(User user);
+    void insertUser(User user);
 
 }

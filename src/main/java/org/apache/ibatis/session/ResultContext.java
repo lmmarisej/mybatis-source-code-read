@@ -20,12 +20,12 @@ package org.apache.ibatis.session;
  */
 public interface ResultContext<T> {
 
-  T getResultObject();
+    T getResultObject();
 
-  int getResultCount();
+    int getResultCount();
 
-  boolean isStopped();
+    boolean isStopped();
 
-  void stop();
+    void stop();
 
 }

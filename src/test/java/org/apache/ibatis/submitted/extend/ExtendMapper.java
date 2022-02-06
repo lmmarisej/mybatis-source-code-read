@@ -16,7 +16,7 @@
 package org.apache.ibatis.submitted.extend;
 
 public interface ExtendMapper {
-  Parent selectParent();
+    Parent selectParent();
 
-  Child selectChild();
+    Child selectChild();
 }

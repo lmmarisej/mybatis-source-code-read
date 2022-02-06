@@ -17,30 +17,35 @@
 
 -->
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.multidb.MultiDbMapper">
 
     <select id="select1" resultType="string" parameterType="int">
-        select
-        name from common where id=#{value}
+        select name
+        from common
+        where id = #{value}
     </select>
 
     <select id="select1" databaseId="hsql"
-        resultType="string" parameterType="int">
-        select name from hsql where
-        id=#{value}
+            resultType="string" parameterType="int">
+        select name
+        from hsql
+        where id = #{value}
     </select>
 
     <select id="select2" resultType="string" parameterType="int">
-        select
-        name from common where id=#{value}
+        select name
+        from common
+        where id = #{value}
     </select>
 
     <select id="select2" databaseId="OTHER" resultType="string"
-        parameterType="int">
-        select name from oracle where id=#{value}
+            parameterType="int">
+        select name
+        from oracle
+        where id = #{value}
     </select>
 
     <select id="select3" resultType="string" parameterType="int">
@@ -87,10 +92,10 @@
 
     <insert id="insert2" parameterType="org.apache.ibatis.submitted.multidb.User">
         <selectKey keyProperty="id" resultType="int" order="BEFORE">
-                select max(id) + 1 from common
+            select max(id) + 1 from common
         </selectKey>
         <selectKey keyProperty="id" resultType="int" order="BEFORE" databaseId="hsql">
-                select max(id) + 1 from hsql
+            select max(id) + 1 from hsql
         </selectKey>
         <if test="_databaseId == 'hsql'">
             insert into hsql values (#{id}, #{name})

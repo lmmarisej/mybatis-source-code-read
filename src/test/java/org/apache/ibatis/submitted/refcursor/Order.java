@@ -18,31 +18,31 @@ package org.apache.ibatis.submitted.refcursor;
 import java.util.List;
 
 public class Order {
-  private Integer orderId;
-  private String customerName;
-  private List<OrderDetail> detailLines;
+    private Integer orderId;
+    private String customerName;
+    private List<OrderDetail> detailLines;
 
-  public Integer getOrderId() {
-    return orderId;
-  }
+    public Integer getOrderId() {
+        return orderId;
+    }
 
-  public void setOrderId(Integer orderId) {
-    this.orderId = orderId;
-  }
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
 
-  public String getCustomerName() {
-    return customerName;
-  }
+    public String getCustomerName() {
+        return customerName;
+    }
 
-  public void setCustomerName(String customerName) {
-    this.customerName = customerName;
-  }
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
 
-  public List<OrderDetail> getDetailLines() {
-    return detailLines;
-  }
+    public List<OrderDetail> getDetailLines() {
+        return detailLines;
+    }
 
-  public void setDetailLines(List<OrderDetail> detailLines) {
-    this.detailLines = detailLines;
-  }
+    public void setDetailLines(List<OrderDetail> detailLines) {
+        this.detailLines = detailLines;
+    }
 }

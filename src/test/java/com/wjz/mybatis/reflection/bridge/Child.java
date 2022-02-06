@@ -9,53 +9,52 @@ import java.util.List;
  * 编译后生成一个默认的构造方法、bridgeMethod方法本身、桥接方法<br>
  * 桥接方法的签名为：public synthetic bridge Object bridgeMethod(Object param)
  * </p>
- * 
- * @author iss002
  *
+ * @author iss002
  */
 public class Child implements Parent<String> {
-	
-	private String name;
-	
-	private Child innerChild;
-	
-	private List<Parent> parents;
 
-	/**
-	 * 编译后的方法签名为：public String bridgeMethod(String param)
-	 */
-	@Override
-	public String bridgeMethod(String t) {
-		return t;
-	}
+    private String name;
 
-	@Override
-	public ArrayList<String> getMethod() {
-		return null;
-	}
+    private Child innerChild;
 
-	public String getName() {
-		return name;
-	}
+    private List<Parent> parents;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * 编译后的方法签名为：public String bridgeMethod(String param)
+     */
+    @Override
+    public String bridgeMethod(String t) {
+        return t;
+    }
 
-	public Child getInnerChild() {
-		return innerChild;
-	}
+    @Override
+    public ArrayList<String> getMethod() {
+        return null;
+    }
 
-	public void setInnerChild(Child innerChild) {
-		this.innerChild = innerChild;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public List<Parent> getParents() {
-		return parents;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setParents(List<Parent> parents) {
-		this.parents = parents;
-	}
+    public Child getInnerChild() {
+        return innerChild;
+    }
+
+    public void setInnerChild(Child innerChild) {
+        this.innerChild = innerChild;
+    }
+
+    public List<Parent> getParents() {
+        return parents;
+    }
+
+    public void setParents(List<Parent> parents) {
+        this.parents = parents;
+    }
 
 }

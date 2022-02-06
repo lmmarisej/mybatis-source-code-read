@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.submitted.extends_with_constructor;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Properties;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSourceFactory;
 import org.apache.ibatis.mapping.Environment;
@@ -30,6 +26,10 @@ import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.util.Properties;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
  * Test for NPE when using extends.
@@ -53,6 +53,7 @@ class NpeExtendsTest {
         configuration.addMapper(TeacherMapper.class);
         configuration.getMappedStatementNames();
     }
+
     @Test
     void testWithConstructorConfiguration() {
         Configuration configuration = new Configuration();
@@ -79,6 +80,7 @@ class NpeExtendsTest {
 
         return new DefaultSqlSessionFactory(configuration);
     }
+
     @Test
     void testSelectWithTeacher() {
         SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();
@@ -89,6 +91,7 @@ class NpeExtendsTest {
             assertTrue(testStudent.getConstructors().contains(StudentConstructor.Constructor.ID_NAME));
         }
     }
+
     @Test
     void testSelectNoName() {
         SqlSessionFactory sqlSessionFactory = getSqlSessionFactoryWithConstructor();

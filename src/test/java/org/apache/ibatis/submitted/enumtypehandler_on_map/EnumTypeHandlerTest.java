@@ -15,9 +15,6 @@
  */
 package org.apache.ibatis.submitted.enumtypehandler_on_map;
 
-import java.io.Reader;
-import java.util.List;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -28,6 +25,9 @@ import org.apache.ibatis.submitted.enumtypehandler_on_map.PersonMapper.TypeName;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.io.Reader;
+import java.util.List;
 
 class EnumTypeHandlerTest {
 
@@ -45,13 +45,14 @@ class EnumTypeHandlerTest {
 
     @Test
     void testEnumWithParam() {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession() ) {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PersonMapper personMapper = sqlSession.getMapper(PersonMapper.class);
             List<Person> persons = personMapper.getByType(Person.Type.PERSON, "");
             Assertions.assertNotNull(persons, "Persons must not be null");
             Assertions.assertEquals(1, persons.size(), "Persons must contain exactly 1 person");
         }
     }
+
     @Test
     void testEnumWithoutParam() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {

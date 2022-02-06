@@ -16,8 +16,8 @@
 package org.apache.ibatis.submitted.enumtypehandler_on_annotation;
 
 /**
- * @since #444
  * @author Kazuki Shimizu
+ * @since #444
  */
 public class Person {
 
@@ -44,24 +44,31 @@ public class Person {
     public String getFirstName() {
         return firstName;
     }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
     public String getLastName() {
         return lastName;
     }
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     public Integer getId() {
         return id;
     }
+
     public void setId(Integer id) {
         this.id = id;
     }
+
     public PersonType getPersonType() {
         return personType;
     }
+
     public void setPersonType(PersonType personType) {
         this.personType = personType;
     }

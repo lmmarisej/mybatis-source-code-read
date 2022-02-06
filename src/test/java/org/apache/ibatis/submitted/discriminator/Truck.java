@@ -16,13 +16,13 @@
 package org.apache.ibatis.submitted.discriminator;
 
 public class Truck extends Vehicle {
-  protected Float carryingCapacity;
+    protected Float carryingCapacity;
 
-  public Float getCarryingCapacity() {
-    return carryingCapacity;
-  }
+    public Float getCarryingCapacity() {
+        return carryingCapacity;
+    }
 
-  public void setCarryingCapacity(Float carryingCapacity) {
-    this.carryingCapacity = carryingCapacity;
-  }
+    public void setCarryingCapacity(Float carryingCapacity) {
+        this.carryingCapacity = carryingCapacity;
+    }
 }

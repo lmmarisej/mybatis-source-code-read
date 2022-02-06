@@ -22,59 +22,60 @@ import org.apache.ibatis.io.Resources;
  */
 public class Jdk {
 
-  /**
-   * <code>true</code> if <code>java.lang.reflect.Parameter</code> is available.
-   * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
-   */
-  @Deprecated
-  public static final boolean parameterExists;
+    /**
+     * <code>true</code> if <code>java.lang.reflect.Parameter</code> is available.
+     *
+     * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
+     */
+    @Deprecated
+    public static final boolean parameterExists;
 
-  static {
-    boolean available = false;
-    try {
-      Resources.classForName("java.lang.reflect.Parameter");
-      available = true;
-    } catch (ClassNotFoundException e) {
-      // ignore
+    static {
+        boolean available = false;
+        try {
+            Resources.classForName("java.lang.reflect.Parameter");
+            available = true;
+        } catch (ClassNotFoundException e) {
+            // ignore
+        }
+        parameterExists = available;
     }
-    parameterExists = available;
-  }
 
-  /**
-   * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
-   */
-  @Deprecated
-  public static final boolean dateAndTimeApiExists;
+    /**
+     * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
+     */
+    @Deprecated
+    public static final boolean dateAndTimeApiExists;
 
-  static {
-    boolean available = false;
-    try {
-      Resources.classForName("java.time.Clock");
-      available = true;
-    } catch (ClassNotFoundException e) {
-      // ignore
+    static {
+        boolean available = false;
+        try {
+            Resources.classForName("java.time.Clock");
+            available = true;
+        } catch (ClassNotFoundException e) {
+            // ignore
+        }
+        dateAndTimeApiExists = available;
     }
-    dateAndTimeApiExists = available;
-  }
 
-  /**
-   * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
-   */
-  @Deprecated
-  public static final boolean optionalExists;
+    /**
+     * @deprecated Since 3.5.0, Will remove this field at feature(next major version up)
+     */
+    @Deprecated
+    public static final boolean optionalExists;
 
-  static {
-    boolean available = false;
-    try {
-      Resources.classForName("java.util.Optional");
-      available = true;
-    } catch (ClassNotFoundException e) {
-      // ignore
+    static {
+        boolean available = false;
+        try {
+            Resources.classForName("java.util.Optional");
+            available = true;
+        } catch (ClassNotFoundException e) {
+            // ignore
+        }
+        optionalExists = available;
     }
-    optionalExists = available;
-  }
 
-  private Jdk() {
-    super();
-  }
+    private Jdk() {
+        super();
+    }
 }

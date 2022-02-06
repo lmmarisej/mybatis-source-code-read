@@ -15,21 +15,17 @@
  */
 package org.apache.ibatis.submitted.deferload_common_property;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.apache.ibatis.BaseDataTest;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.ibatis.BaseDataTest;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.ResultContext;
-import org.apache.ibatis.session.ResultHandler;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class CommonPropertyDeferLoadTest {
 
@@ -54,15 +50,16 @@ class CommonPropertyDeferLoadTest {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             class MyResultHandler implements ResultHandler {
                 private List<Child> children = new ArrayList<>();
+
                 @Override
                 public void handleResult(ResultContext context) {
-                    Child child = (Child)context.getResultObject();
+                    Child child = (Child) context.getResultObject();
                     children.add(child);
                 }
             }
             MyResultHandler myResultHandler = new MyResultHandler();
             sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", myResultHandler);
-            for (Child child: myResultHandler.children) {
+            for (Child child : myResultHandler.children) {
                 assertNotNull(child.getFather());
             }
         }
@@ -74,7 +71,7 @@ class CommonPropertyDeferLoadTest {
             class MyResultHandler implements ResultHandler {
                 @Override
                 public void handleResult(ResultContext context) {
-                    Child child = (Child)context.getResultObject();
+                    Child child = (Child) context.getResultObject();
                     assertNotNull(child.getFather());
                 }
             }
@@ -87,15 +84,16 @@ class CommonPropertyDeferLoadTest {
         try (SqlSession sqlSession = lazyLoadSqlSessionFactory.openSession()) {
             class MyResultHandler implements ResultHandler {
                 private List<Child> children = new ArrayList<>();
+
                 @Override
                 public void handleResult(ResultContext context) {
-                    Child child = (Child)context.getResultObject();
+                    Child child = (Child) context.getResultObject();
                     children.add(child);
                 }
             }
             MyResultHandler myResultHandler = new MyResultHandler();
             sqlSession.select("org.apache.ibatis.submitted.deferload_common_property.ChildMapper.selectAll", myResultHandler);
-            for (Child child: myResultHandler.children) {
+            for (Child child : myResultHandler.children) {
                 assertNotNull(child.getFather());
             }
         }
@@ -107,7 +105,7 @@ class CommonPropertyDeferLoadTest {
             class MyResultHandler implements ResultHandler {
                 @Override
                 public void handleResult(ResultContext context) {
-                    Child child = (Child)context.getResultObject();
+                    Child child = (Child) context.getResultObject();
                     assertNotNull(child.getFather());
                 }
             }

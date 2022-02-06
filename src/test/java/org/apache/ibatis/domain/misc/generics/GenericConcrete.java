@@ -16,23 +16,23 @@
 package org.apache.ibatis.domain.misc.generics;
 
 public class GenericConcrete extends GenericSubclass implements GenericInterface<Long> {
-  private Long id;
+    private Long id;
 
-  @Override
-  public Long getId() {
-    return id;
-  }
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(String id) {
-    this.id = Long.valueOf(id);
-  }
+    public void setId(String id) {
+        this.id = Long.valueOf(id);
+    }
 
-  @Override
-  public void setId(Long id) {
-    this.id = id;
-  }
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public void setId(Integer id) {
-    this.id = (long) id;
-  }
+    public void setId(Integer id) {
+        this.id = (long) id;
+    }
 }

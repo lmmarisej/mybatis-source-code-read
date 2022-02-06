@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.submitted.duplicate_statements;
 
-import java.util.List;
-
 import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 public interface Mapper {
 
-  List<User> getAllUsers();
+    List<User> getAllUsers();
 
-  List<User> getAllUsers(RowBounds rowBounds);
+    List<User> getAllUsers(RowBounds rowBounds);
 }

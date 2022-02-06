@@ -19,22 +19,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Resource {
-  private String name;
-  private List<Principal> Principals = new ArrayList<>();
+    private String name;
+    private List<Principal> Principals = new ArrayList<>();
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public List<Principal> getPrincipals() {
-    return Principals;
-  }
+    public List<Principal> getPrincipals() {
+        return Principals;
+    }
 
-  public void setPrincipals(List<Principal> principals) {
-    this.Principals = principals;
-  }
+    public void setPrincipals(List<Principal> principals) {
+        this.Principals = principals;
+    }
 }

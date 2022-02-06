@@ -5,62 +5,62 @@ import java.util.Date;
 
 public class Person implements Serializable {
 
-	private static final long serialVersionUID = -3853696996492142736L;
-	
-	private Long id;
-	
-	private String name;
-	
-	private Integer age;
-	
-	private Double salary;
-	
-	private Date addTime;
+    private static final long serialVersionUID = -3853696996492142736L;
 
-	public Long getId() {
-		return id;
-	}
+    private Long id;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    private String name;
 
-	public String getName() {
-		return name;
-	}
+    private Integer age;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private Double salary;
 
-	public Integer getAge() {
-		return age;
-	}
+    private Date addTime;
 
-	public void setAge(Integer age) {
-		this.age = age;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Double getSalary() {
-		return salary;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setSalary(Double salary) {
-		this.salary = salary;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Date getAddTime() {
-		return addTime;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setAddTime(Date addTime) {
-		this.addTime = addTime;
-	}
+    public Integer getAge() {
+        return age;
+    }
 
-	@Override
-	public String toString() {
-		return "Person [id=" + id + ", name=" + name + ", age=" + age + ", salary=" + salary + ", addTime=" + addTime
-				+ "]";
-	}
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+
+    public Date getAddTime() {
+        return addTime;
+    }
+
+    public void setAddTime(Date addTime) {
+        this.addTime = addTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Person [id=" + id + ", name=" + name + ", age=" + age + ", salary=" + salary + ", addTime=" + addTime
+                + "]";
+    }
 
 }

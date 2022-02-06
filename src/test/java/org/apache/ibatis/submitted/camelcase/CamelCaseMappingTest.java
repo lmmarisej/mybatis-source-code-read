@@ -15,10 +15,6 @@
  */
 package org.apache.ibatis.submitted.camelcase;
 
-import java.io.Reader;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -28,37 +24,41 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.Reader;
+import java.util.List;
+import java.util.Map;
+
 class CamelCaseMappingTest {
 
-  protected static SqlSessionFactory sqlSessionFactory;
+    protected static SqlSessionFactory sqlSessionFactory;
 
-  @BeforeAll
-  static void setUp() throws Exception {
-    try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/camelcase/MapperConfig.xml")) {
-      sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+    @BeforeAll
+    static void setUp() throws Exception {
+        try (Reader reader = Resources.getResourceAsReader("org/apache/ibatis/submitted/camelcase/MapperConfig.xml")) {
+            sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        }
+
+        BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
+                "org/apache/ibatis/submitted/camelcase/CreateDB.sql");
     }
 
-    BaseDataTest.runScript(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource(),
-            "org/apache/ibatis/submitted/camelcase/CreateDB.sql");
-  }
-
-  @Test
-  void testList() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      List<Camel> list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelect");
-      Assertions.assertTrue(list.size() > 0);
-      Assertions.assertNotNull(list.get(0).getFirstName());
-      Assertions.assertNull(list.get(0).getLAST_NAME());
+    @Test
+    void testList() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            List<Camel> list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelect");
+            Assertions.assertTrue(list.size() > 0);
+            Assertions.assertNotNull(list.get(0).getFirstName());
+            Assertions.assertNull(list.get(0).getLAST_NAME());
+        }
     }
-  }
 
-  @Test
-  void testMap() {
-    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      List<Map<String, Object>> list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelectMap");
-      Assertions.assertTrue(list.size() > 0);
-      Assertions.assertTrue(list.get(0).containsKey("LAST_NAME"));
+    @Test
+    void testMap() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            List<Map<String, Object>> list = sqlSession.selectList("org.apache.ibatis.submitted.camel.doSelectMap");
+            Assertions.assertTrue(list.size() > 0);
+            Assertions.assertTrue(list.get(0).containsKey("LAST_NAME"));
+        }
     }
-  }
 
 }

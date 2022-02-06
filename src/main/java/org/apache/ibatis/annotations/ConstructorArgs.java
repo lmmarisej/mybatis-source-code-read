@@ -15,11 +15,7 @@
  */
 package org.apache.ibatis.annotations;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * The annotation that be grouping mapping definitions for constructor.
@@ -45,10 +41,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface ConstructorArgs {
-  /**
-   * Returns mapping definitions for constructor.
-   *
-   * @return mapping definitions
-   */
-  Arg[] value() default {};
+    /**
+     * Returns mapping definitions for constructor.
+     *
+     * @return mapping definitions
+     */
+    Arg[] value() default {};
 }

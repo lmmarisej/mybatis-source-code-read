@@ -19,8 +19,8 @@ import java.util.List;
 
 public interface Mapper {
 
-  List<List<?>> getUsersAndGroups();
+    List<List<?>> getUsersAndGroups();
 
-  List<List<?>> multiResultsWithUpdate();
+    List<List<?>> multiResultsWithUpdate();
 
 }

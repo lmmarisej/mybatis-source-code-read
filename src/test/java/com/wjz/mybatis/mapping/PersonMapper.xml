@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.wjz.mybatis.mapper.PersonMapper">
 
-	<resultMap type="com.wjz.mybatis.pojo.Person" id="personResultMap">
-		<constructor>
-			<idArg/>
-			<arg/>
-			<arg/>
-		</constructor>
-		<id/>
-		<result/>
-		<association property=""></association>
-	</resultMap>
+    <resultMap type="com.wjz.mybatis.pojo.Person" id="personResultMap">
+        <constructor>
+            <idArg/>
+            <arg/>
+            <arg/>
+        </constructor>
+        <id/>
+        <result/>
+        <association property=""></association>
+    </resultMap>
 
-	<!-- 二级缓存 -->
-	<!-- 默认使用org.apache.ibatis.cache.impl.PerpetualCache -->
-	<cache type="PERPETUAL" eviction="LRU" flushInterval="" >
-		<property name="" value=""/>
-	</cache>
-	
-	<cache-ref namespace="" />
+    <!-- 二级缓存 -->
+    <!-- 默认使用org.apache.ibatis.cache.impl.PerpetualCache -->
+    <cache type="PERPETUAL" eviction="LRU" flushInterval="">
+        <property name="" value=""/>
+    </cache>
 
-	<select id="selectById" resultType="com.wjz.mybatis.pojo.Person" >
-		select * from person where id = #{id }
-	</select>
+    <cache-ref namespace=""/>
+
+    <select id="selectById" resultType="com.wjz.mybatis.pojo.Person">
+        select *
+        from person
+        where id = #{id }
+    </select>
 </mapper>

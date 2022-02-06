@@ -21,16 +21,16 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 public class CustomObjectWrapperFactory implements ObjectWrapperFactory {
 
-  private String option;
+    private String option;
 
-  @Override
-  public boolean hasWrapperFor(Object object) {
-    return false;
-  }
+    @Override
+    public boolean hasWrapperFor(Object object) {
+        return false;
+    }
 
-  @Override
-  public ObjectWrapper getWrapperFor(MetaObject metaObject, Object object) {
-    return null;
-  }
+    @Override
+    public ObjectWrapper getWrapperFor(MetaObject metaObject, Object object) {
+        return null;
+    }
 
 }

@@ -19,8 +19,8 @@ import org.junit.jupiter.api.Tag;
 
 @Tag("RequireIllegalAccess")
 class CglibLazyTest extends AbstractLazyTest {
-  @Override
-  protected String getConfiguration() {
-    return "cglib";
-  }
+    @Override
+    protected String getConfiguration() {
+        return "cglib";
+    }
 }

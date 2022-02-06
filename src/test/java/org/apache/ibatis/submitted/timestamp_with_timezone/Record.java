@@ -20,34 +20,34 @@ import java.time.OffsetTime;
 
 public class Record {
 
-  private Integer id;
+    private Integer id;
 
-  private OffsetDateTime odt;
+    private OffsetDateTime odt;
 
-  private OffsetTime ot;
+    private OffsetTime ot;
 
-  public Integer getId() {
-    return id;
-  }
+    public Integer getId() {
+        return id;
+    }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-  public OffsetDateTime getOdt() {
-    return odt;
-  }
+    public OffsetDateTime getOdt() {
+        return odt;
+    }
 
-  public void setOdt(OffsetDateTime odt) {
-    this.odt = odt;
-  }
+    public void setOdt(OffsetDateTime odt) {
+        this.odt = odt;
+    }
 
-  public OffsetTime getOt() {
-    return ot;
-  }
+    public OffsetTime getOt() {
+        return ot;
+    }
 
-  public void setOt(OffsetTime ot) {
-    this.ot = ot;
-  }
+    public void setOt(OffsetTime ot) {
+        this.ot = ot;
+    }
 
 }

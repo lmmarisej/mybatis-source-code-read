@@ -17,12 +17,13 @@
 
 -->
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.mybatis.spring.TestProblemMapper">
 
     <select id="findProblemTest">
         SELECT *
-        FROM table_test WHERE id = #{}
+        FROM table_test
+        WHERE id = #{}
     </select>
 </mapper>

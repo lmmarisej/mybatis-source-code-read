@@ -17,8 +17,8 @@
 
 -->
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.apache.ibatis.submitted.global_variables_defaults.XmlMapperTest$XmlMapper">
 
@@ -37,11 +37,12 @@
     </select>
 
     <select id="selectFromVariable" flushCache="true" resultType="string">
-        <include refid="select" />
+        <include refid="select"/>
     </select>
 
     <sql id="select">
-        SELECT ${select.columns:'9999'} FROM INFORMATION_SCHEMA.SYSTEM_USERS
+        SELECT ${select.columns:'9999'}
+        FROM INFORMATION_SCHEMA.SYSTEM_USERS
     </sql>
 
 </mapper>

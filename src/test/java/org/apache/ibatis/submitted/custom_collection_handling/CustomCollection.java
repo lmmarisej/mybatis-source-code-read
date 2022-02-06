@@ -93,7 +93,7 @@ public class CustomCollection<T> {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof CustomCollection)) return false;
-        return data.equals(((CustomCollection)o).data);
+        return data.equals(((CustomCollection) o).data);
     }
 
     public boolean containsAll(Collection<?> c) {

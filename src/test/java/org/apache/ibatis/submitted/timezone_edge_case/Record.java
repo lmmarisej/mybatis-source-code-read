@@ -20,32 +20,32 @@ import java.time.LocalDateTime;
 
 public class Record {
 
-  private Integer id;
+    private Integer id;
 
-  private LocalDateTime ts;
-  private LocalDate d;
+    private LocalDateTime ts;
+    private LocalDate d;
 
-  public Integer getId() {
-    return id;
-  }
+    public Integer getId() {
+        return id;
+    }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-  public LocalDateTime getTs() {
-    return ts;
-  }
+    public LocalDateTime getTs() {
+        return ts;
+    }
 
-  public void setTs(LocalDateTime ts) {
-    this.ts = ts;
-  }
+    public void setTs(LocalDateTime ts) {
+        this.ts = ts;
+    }
 
-  public LocalDate getD() {
-    return d;
-  }
+    public LocalDate getD() {
+        return d;
+    }
 
-  public void setD(LocalDate d) {
-    this.d = d;
-  }
+    public void setD(LocalDate d) {
+        this.d = d;
+    }
 }

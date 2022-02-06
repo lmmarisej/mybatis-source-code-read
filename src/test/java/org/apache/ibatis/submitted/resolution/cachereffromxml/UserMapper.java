@@ -20,5 +20,5 @@ import org.apache.ibatis.submitted.resolution.User;
 
 @CacheNamespace
 public interface UserMapper {
-  User getUser(Integer id);
+    User getUser(Integer id);
 }

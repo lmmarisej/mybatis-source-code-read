@@ -23,6 +23,7 @@
 
     <select id="findProblemResultMapTest" resultMap="java.lang.String">
         SELECT *
-        FROM table_test WHERE id = #{id}
+        FROM table_test
+        WHERE id = #{id}
     </select>
 </mapper>

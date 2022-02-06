@@ -19,10 +19,10 @@ import java.util.List;
 
 public interface Mapper {
 
-  List<Car> getCars();
+    List<Car> getCars();
 
-  List<Car> getCars2();
+    List<Car> getCars2();
 
-  List<Car> getCarsAndDetectAssociationType();
+    List<Car> getCarsAndDetectAssociationType();
 
 }

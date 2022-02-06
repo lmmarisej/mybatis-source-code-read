@@ -7,20 +7,19 @@ import java.util.List;
  * <p>
  * 范型T被换成了Object
  * </p>
- * 
- * @author iss002
  *
  * @param <T>
+ * @author iss002
  */
 public interface Parent<T> {
 
-	/**
-	 * 编译后的方法签名为：public abstract Object bridgeMethod(Object param)
-	 * 
-	 * @param t
-	 * @return
-	 */
-	T bridgeMethod(T t);
-	
-	List<String> getMethod();
+    /**
+     * 编译后的方法签名为：public abstract Object bridgeMethod(Object param)
+     *
+     * @param t
+     * @return
+     */
+    T bridgeMethod(T t);
+
+    List<String> getMethod();
 }

@@ -4,26 +4,24 @@ package com.wjz.mybatis.proxy.jdk;
 //import java.lang.reflect.Method;
 //import java.lang.reflect.Proxy;
 
-import org.junit.Test;
-
 import com.wjz.mybatis.proxy.Subject;
 import com.wjz.mybatis.proxy.SubjectImpl;
+import org.junit.Test;
 
 /**
  * Jdk动态代理：Jdk动态生成Class字节，指定类加载器加载Class字节生成Java对象（代理对象），将InvokerHandler作为构造参数传入
  * 执行代理对象的方法时会调用InvokerHandler的invoke方法
- * 
- * @author iss002
  *
+ * @author iss002
  */
 public class JdkProxyTest {
 
-	@Test
-	public void jdkProxy() {
-		CustomInvokerHandler handler = new CustomInvokerHandler(new SubjectImpl());
-		Subject proxy = (Subject) handler.getProxy();
-		proxy.operation();
-	}
+    @Test
+    public void jdkProxy() {
+        CustomInvokerHandler handler = new CustomInvokerHandler(new SubjectImpl());
+        Subject proxy = (Subject) handler.getProxy();
+        proxy.operation();
+    }
 	
 	/*
 	 * 反编译代理对象的字节码如下：

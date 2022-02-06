@@ -15,8 +15,6 @@
  */
 package org.apache.ibatis.submitted.flush_statement_npe;
 
-import java.io.Reader;
-
 import org.apache.ibatis.BaseDataTest;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.ExecutorType;
@@ -25,6 +23,8 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.io.Reader;
 
 class FlushStatementNpeTest {
 
@@ -56,6 +56,7 @@ class FlushStatementNpeTest {
             sqlSession.commit();
         }
     }
+
     @Test
     void testSameUpdateAfterCommitReuse() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.REUSE)) {
@@ -72,6 +73,7 @@ class FlushStatementNpeTest {
             sqlSession.commit();
         }
     }
+
     @Test
     void testSameUpdateAfterCommitBatch() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH)) {

@@ -20,43 +20,43 @@ import java.util.Map;
 
 public interface Level0Mapper<L, M, N> {
 
-  void simpleSelectVoid(Integer param);
+    void simpleSelectVoid(Integer param);
 
-  double simpleSelectPrimitive(int param);
+    double simpleSelectPrimitive(int param);
 
-  Double simpleSelect();
+    Double simpleSelect();
 
-  List<Double> simpleSelectList();
+    List<Double> simpleSelectList();
 
-  Map<Integer, Double> simpleSelectMap();
+    Map<Integer, Double> simpleSelectMap();
 
-  String[] simpleSelectArray();
+    String[] simpleSelectArray();
 
-  String[][] simpleSelectArrayOfArray();
+    String[][] simpleSelectArrayOfArray();
 
-  <K extends Calculator<?>> K simpleSelectTypeVar();
+    <K extends Calculator<?>> K simpleSelectTypeVar();
 
-  List<? extends String> simpleSelectWildcard();
+    List<? extends String> simpleSelectWildcard();
 
-  N select(N param);
+    N select(N param);
 
-  List<N> selectList(M param1, N param2);
+    List<N> selectList(M param1, N param2);
 
-  List<? extends N> selectWildcardList();
+    List<? extends N> selectWildcardList();
 
-  Map<N, M> selectMap();
+    Map<N, M> selectMap();
 
-  N[] selectArray(List<N>[] param);
+    N[] selectArray(List<N>[] param);
 
-  N[][] selectArrayOfArray();
+    N[][] selectArrayOfArray();
 
-  List<N>[] selectArrayOfList();
+    List<N>[] selectArrayOfList();
 
-  Calculator<N> selectCalculator(Calculator<N> param);
+    Calculator<N> selectCalculator(Calculator<N> param);
 
-  List<Calculator<L>> selectCalculatorList();
+    List<Calculator<L>> selectCalculatorList();
 
-  interface Level0InnerMapper extends Level0Mapper<String, Long, Float> {
-  }
+    interface Level0InnerMapper extends Level0Mapper<String, Long, Float> {
+    }
 
 }
