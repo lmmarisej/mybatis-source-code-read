@@ -36,16 +36,19 @@ import java.util.List;
 import java.util.Properties;
 
 /**
+ * 基于Java XPath 解析器，用于解析MyBatis的mybatis-config.xml和**Mapper.xml等XML配置文件。
+ *
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
 public class XPathParser {
 
-    private final Document document;
-    private boolean validation;
-    private EntityResolver entityResolver;
-    private Properties variables;
-    private XPath xpath;
+    private final Document document;    // XML文件被解析后生成对应的org.w3c.dom.Document对象
+    private boolean validation;     // 是否校验XML文件，一般情况下为true
+    // 提前设置，避免联网导致的验证过程缓慢
+    private EntityResolver entityResolver;  // XML实体解析器，一般通过自定义的XMLMapperEntityResolver从本地获取DTD文件解析
+    private Properties variables; // 变量对象，用来替换需要动态配置的属性值
+    private XPath xpath;         // Java XPath 对象，用于查询XML中的节点和元素
 
     public XPathParser(String xml) {
         commonConstructor(false, null, null);
@@ -214,6 +217,7 @@ public class XPathParser {
         return new XNode(this, node, variables);
     }
 
+    // 解析类型信息
     private Object evaluate(String expression, Object root, QName returnType) {
         try {
             return xpath.evaluate(expression, root, returnType);
@@ -222,6 +226,7 @@ public class XPathParser {
         }
     }
 
+    // 创建Document对象，触发加载XML文档的过程
     private Document createDocument(InputSource inputSource) {
         // important: this must only be called AFTER common constructor
         try {
@@ -236,7 +241,7 @@ public class XPathParser {
             factory.setExpandEntityReferences(true);
 
             DocumentBuilder builder = factory.newDocumentBuilder();
-            builder.setEntityResolver(entityResolver);
+            builder.setEntityResolver(entityResolver);      // 使用本地entityResolver
             builder.setErrorHandler(new ErrorHandler() {
                 @Override
                 public void error(SAXParseException exception) throws SAXException {
@@ -253,6 +258,7 @@ public class XPathParser {
                     // NOP
                 }
             });
+            // 对XML开始加载
             return builder.parse(inputSource);
         } catch (Exception e) {
             throw new BuilderException("Error creating document instance.  Cause: " + e, e);

@@ -30,11 +30,11 @@ import java.util.function.Supplier;
 public class XNode {
 
     private final Node node;
-    private final String name;
-    private final String body;
-    private final Properties attributes;
-    private final Properties variables;
-    private final XPathParser xpathParser;
+    private final String name;      // node名
+    private final String body;      // 节点内容
+    private final Properties attributes;    // 节点属性集合
+    private final Properties variables;     // properties节点下定义的键值对
+    private final XPathParser xpathParser;  // XNode对象根据此对象生成
 
     public XNode(XPathParser xpathParser, Node node, Properties variables) {
         this.xpathParser = xpathParser;
@@ -328,6 +328,7 @@ public class XNode {
         if (attributeNodes != null) {
             for (int i = 0; i < attributeNodes.getLength(); i++) {
                 Node attribute = attributeNodes.item(i);
+                // 解析每个属性中的占位符，获取对应的值
                 String value = PropertyParser.parse(attribute.getNodeValue(), variables);
                 attributes.put(attribute.getNodeName(), value);
             }
@@ -337,7 +338,7 @@ public class XNode {
 
     private String parseBody(Node node) {
         String data = getBodyData(node);
-        if (data == null) {
+        if (data == null) {     // 当前节点不是文本节点
             NodeList children = node.getChildNodes();
             for (int i = 0; i < children.getLength(); i++) {
                 Node child = children.item(i);
@@ -350,11 +351,12 @@ public class XNode {
         return data;
     }
 
+    // 获取所需的节点信息
     private String getBodyData(Node child) {
         if (child.getNodeType() == Node.CDATA_SECTION_NODE
-                || child.getNodeType() == Node.TEXT_NODE) {
+                || child.getNodeType() == Node.TEXT_NODE) {     // 只处理文本内容
             String data = ((CharacterData) child).getData();
-            data = PropertyParser.parse(data, variables);
+            data = PropertyParser.parse(data, variables);       // 处理文本节点中的占位符
             return data;
         }
         return null;

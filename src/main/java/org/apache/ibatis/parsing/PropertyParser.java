@@ -45,23 +45,25 @@ public class PropertyParser {
      */
     public static final String KEY_DEFAULT_VALUE_SEPARATOR = KEY_PREFIX + "default-value-separator";
 
-    private static final String ENABLE_DEFAULT_VALUE = "false";
+    private static final String ENABLE_DEFAULT_VALUE = "false";     // 默认关闭默认值功能
     private static final String DEFAULT_VALUE_SEPARATOR = ":";
 
     private PropertyParser() {
         // Prevent Instantiation
     }
 
+    // 获取占位符对应的值
     public static String parse(String string, Properties variables) {
         VariableTokenHandler handler = new VariableTokenHandler(variables);
+        // 指定占位符格式
         GenericTokenParser parser = new GenericTokenParser("${", "}", handler);
         return parser.parse(string);
     }
 
     private static class VariableTokenHandler implements TokenHandler {
-        private final Properties variables;
-        private final boolean enableDefaultValue;
-        private final String defaultValueSeparator;
+        private final Properties variables;             // <Properties>节点下的键值对，用来替换占位符
+        private final boolean enableDefaultValue;       // 占位符中使用默认值
+        private final String defaultValueSeparator;     // 占位符和默认值之间的分隔符
 
         private VariableTokenHandler(Properties variables) {
             this.variables = variables;
@@ -81,18 +83,19 @@ public class PropertyParser {
                     final int separatorIndex = content.indexOf(defaultValueSeparator);
                     String defaultValue = null;
                     if (separatorIndex >= 0) {
-                        key = content.substring(0, separatorIndex);
+                        key = content.substring(0, separatorIndex);     // 占位符名称
+                        // 获取默认值
                         defaultValue = content.substring(separatorIndex + defaultValueSeparator.length());
                     }
                     if (defaultValue != null) {
-                        return variables.getProperty(key, defaultValue);
+                        return variables.getProperty(key, defaultValue);        // 带着默认值去获取
                     }
                 }
                 if (variables.containsKey(key)) {
                     return variables.getProperty(key);
                 }
             }
-            return "${" + content + "}";
+            return "${" + content + "}";        // 没有配置该占位符的值，解析失败，原样返回
         }
     }
 
