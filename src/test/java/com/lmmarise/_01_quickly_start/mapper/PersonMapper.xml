@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--命名空间，用于Mybatis框架区分多个mapper的标志，在sqlSession执行查询时由用户传入，用来匹配具体的某个namespace-->
+<mapper namespace="com.lmmarise._01_quickly_start.mapper.PersonMapper">
+
+    <resultMap type="com.lmmarise._01_quickly_start.pojo.Person" id="personResultMap">
+        <id column="id" property="id" javaType="long"/>
+        <result column="name" property="name" javaType="string"/>
+        <result column="age" property="age" javaType="int"/>
+        <result column="salary" property="salary" javaType="double"/>
+        <result column="addTime" property="addTime" javaType="date"/>
+    </resultMap>
+
+    <!--id：在namespace范围内有效-->
+    <select id="selectById" resultType="com.lmmarise._01_quickly_start.pojo.Person">
+        select *
+        from person
+        where id = #{id}
+    </select>
+</mapper>
