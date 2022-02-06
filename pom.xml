@@ -31,104 +31,6 @@
   <packaging>jar</packaging>
 
   <name>mybatis</name>
-  <description>
-    The MyBatis SQL mapper framework makes it easier to use a relational database with object-oriented
-    applications. MyBatis couples objects with stored procedures or SQL statements using a XML descriptor or
-    annotations. Simplicity is the biggest advantage of the MyBatis data mapper over object relational mapping
-    tools.
-  </description>
-  <url>http://www.mybatis.org/mybatis-3</url>
-
-  <inceptionYear>2009</inceptionYear>
-
-  <contributors>
-    <contributor>
-      <name>Adam Gent</name>
-      <email>adam.gent@evocatus.com</email>
-    </contributor>
-    <contributor>
-      <name>Andrea Selva</name>
-      <email>selva.andre@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Antonio Sánchez</name>
-      <email>juntandolineas@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Arkadi Shishlov</name>
-      <email>arkadi.shishlov@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Axel Doerfler</name>
-      <email>axel.doerfler@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Chris Dadej</name>
-      <email>chris.dadej@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Denis Vygovskiy</name>
-      <email>qizant@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Franta Mejta</name>
-      <email>mejta@rewor.cz</email>
-    </contributor>
-    <contributor>
-      <name>Jurriaan Pruys</name>
-      <email>jurriaan@pruys.com</email>
-    </contributor>
-    <contributor>
-      <name>Keith Wong</name>
-      <email>wongkwl@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Lasse Voss</name>
-      <email>lasse.voss@motor-talk-gmbh.de</email>
-    </contributor>
-    <contributor>
-      <name>Luke Stevens</name>
-      <email>nosuchluke@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Paul Krause</name>
-      <email>paulkrause88@alum.mit.edu</email>
-    </contributor>
-    <contributor>
-      <name>Peter Leibiger</name>
-      <email>kuhnroyal@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Riccardo Cossu</name>
-      <email>riccardo.cossu@gmail.com</email>
-    </contributor>
-    <contributor>
-      <name>Tomáš Neuberg</name>
-      <email>neuberg@m-atelier.cz</email>
-    </contributor>
-  </contributors>
-
-  <scm>
-    <url>http://github.com/mybatis/mybatis-3</url>
-    <connection>scm:git:ssh://github.com/mybatis/mybatis-3.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/mybatis/mybatis-3.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
-  <issueManagement>
-    <system>GitHub Issue Management</system>
-    <url>https://github.com/mybatis/mybatis-3/issues</url>
-  </issueManagement>
-  <ciManagement>
-    <system>Github</system>
-    <url>https://github.com/mybatis/mybatis-3/actions</url>
-  </ciManagement>
-  <distributionManagement>
-    <site>
-      <id>gh-pages</id>
-      <name>Mybatis GitHub Pages</name>
-      <url>git:ssh://git@github.com/mybatis/mybatis-3.git?gh-pages#</url>
-    </site>
-  </distributionManagement>
 
   <properties>
     <clirr.comparisonVersion>3.4.6</clirr.comparisonVersion>
@@ -139,6 +41,7 @@
     <osgi.import>*;resolution:=optional</osgi.import>
     <osgi.dynamicImport>*</osgi.dynamicImport>
     <spotbugs.onlyAnalyze>org.apache.ibatis.*</spotbugs.onlyAnalyze>
+    <spring.version>5.0.8.RELEASE</spring.version>
   </properties>
 
   <dependencies>
@@ -291,6 +194,52 @@
       <artifactId>log4j-core</artifactId>
       <version>2.17.1</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aspects</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-expression</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+      <version>${spring.version}</version>
     </dependency>
   </dependencies>
 
