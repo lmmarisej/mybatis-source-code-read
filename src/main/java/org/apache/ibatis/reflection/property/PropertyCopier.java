@@ -21,6 +21,8 @@ import java.lang.reflect.Field;
 
 /**
  * @author Clinton Begin
+ *
+ * 属性拷贝工具，实现相同类型的两个对象之间的属性值拷贝。
  */
 public final class PropertyCopier {
 

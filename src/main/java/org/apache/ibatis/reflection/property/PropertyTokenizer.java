@@ -19,27 +19,29 @@ import java.util.Iterator;
 
 /**
  * @author Clinton Begin
+ *
+ * 解析：orders[0].items[0].name
  */
-public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
-    private String name;
-    private final String indexedName;
-    private String index;
-    private final String children;
+public class PropertyTokenizer implements Iterator<PropertyTokenizer> {     // 支持嵌套
+    private String name;                // 当前表达式名称
+    private final String indexedName;   // 当前表达式索引名
+    private String index;   // 索引下标
+    private final String children;  // 子表达式
 
     public PropertyTokenizer(String fullname) {
         int delim = fullname.indexOf('.');
         if (delim > -1) {
-            name = fullname.substring(0, delim);
-            children = fullname.substring(delim + 1);
+            name = fullname.substring(0, delim);        // orders[0]
+            children = fullname.substring(delim + 1);   // items[0].name
         } else {
-            name = fullname;
+            name = fullname;    // orders[0]
             children = null;
         }
-        indexedName = name;
-        delim = name.indexOf('[');
+        indexedName = name;     // orders[0]
+        delim = name.indexOf('[');  // 6
         if (delim > -1) {
-            index = name.substring(delim + 1, name.length() - 1);
-            name = name.substring(0, delim);
+            index = name.substring(delim + 1, name.length() - 1);   // orders[0]        =>      0
+            name = name.substring(0, delim);        // orders[0]        =>      orders
         }
     }
 

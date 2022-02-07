@@ -1,4 +1,4 @@
-package com.wjz.mybatis.reflection;
+package com.lmmarise._02_reflect;
 
 import com.wjz.mybatis.pojo.RichType;
 import org.apache.ibatis.reflection.MetaObject;

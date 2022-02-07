@@ -21,6 +21,8 @@ import java.lang.reflect.Field;
 
 /**
  * @author Clinton Begin
+ *
+ * 将字段的设置值当成setter方法来使用。
  */
 public class SetFieldInvoker implements Invoker {
     private final Field field;

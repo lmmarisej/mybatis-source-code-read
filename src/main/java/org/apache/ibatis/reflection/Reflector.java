@@ -25,34 +25,35 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * This class represents a cached set of class definition information that
- * allows for easy mapping between property names and getter/setter methods.
+ * This class represents a cached set of class definition information that allows for easy mapping between property names and getter/setter methods.
+ *
+ * 每个Reflector对象都对应一个类，Reflector中缓存了反射操作需要使用的类的元信息。
  *
  * @author Clinton Begin
  */
 public class Reflector {
 
-    private final Class<?> type;
-    private final String[] readablePropertyNames;
+    private final Class<?> type;        // 对应的Class类型
+    private final String[] readablePropertyNames;       // 可读属性集合，存储getter方法的属性
     private final String[] writablePropertyNames;
-    private final Map<String, Invoker> setMethods = new HashMap<>();
+    private final Map<String, Invoker> setMethods = new HashMap<>();    // 记录属性相应的setter方法，key是属性名，Invoker对setter方法的封装
     private final Map<String, Invoker> getMethods = new HashMap<>();
-    private final Map<String, Class<?>> setTypes = new HashMap<>();
+    private final Map<String, Class<?>> setTypes = new HashMap<>();     // 记录setter方法相应的参数类型
     private final Map<String, Class<?>> getTypes = new HashMap<>();
-    private Constructor<?> defaultConstructor;
+    private Constructor<?> defaultConstructor;      // 记录默认构造方法
 
-    private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
+    private Map<String, String> caseInsensitivePropertyMap = new HashMap<>();       // 记录了所有属性名称的集合
 
     public Reflector(Class<?> clazz) {
         type = clazz;
-        addDefaultConstructor(clazz);
-        Method[] classMethods = getClassMethods(clazz);
-        addGetMethods(classMethods);
+        addDefaultConstructor(clazz);       // 默认构造
+        Method[] classMethods = getClassMethods(clazz);     // 获取当前类（包括父类）中定义的所有方法的唯一签名以及对应的Method对象
+        addGetMethods(classMethods);    // 处理getter方法
         addSetMethods(classMethods);
-        addFields(clazz);
-        readablePropertyNames = getMethods.keySet().toArray(new String[0]);
+        addFields(clazz);       // 处理没有getter/setter的字段
+        readablePropertyNames = getMethods.keySet().toArray(new String[0]);     // 默认空数组，根据getter，初始化可读属性名称集合
         writablePropertyNames = setMethods.keySet().toArray(new String[0]);
-        for (String propName : readablePropertyNames) {
+        for (String propName : readablePropertyNames) {     // 初始化caseInsensitivePropertyMap集合
             caseInsensitivePropertyMap.put(propName.toUpperCase(Locale.ENGLISH), propName);
         }
         for (String propName : writablePropertyNames) {
@@ -60,12 +61,14 @@ public class Reflector {
         }
     }
 
+    // 反射遍历所有构造，获取默认构造
     private void addDefaultConstructor(Class<?> clazz) {
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
         Arrays.stream(constructors).filter(constructor -> constructor.getParameterTypes().length == 0)
                 .findAny().ifPresent(constructor -> this.defaultConstructor = constructor);
     }
 
+    // 解析类中定义的getter方法
     private void addGetMethods(Method[] methods) {
         Map<String, List<Method>> conflictingGetters = new HashMap<>();
         Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0 && PropertyNamer.isGetter(m.getName()))
@@ -73,6 +76,7 @@ public class Reflector {
         resolveGetterConflicts(conflictingGetters);
     }
 
+    // 处理子类覆盖的getter方法
     private void resolveGetterConflicts(Map<String, List<Method>> conflictingGetters) {
         for (Entry<String, List<Method>> entry : conflictingGetters.entrySet()) {
             Method winner = null;
@@ -83,7 +87,7 @@ public class Reflector {
                     winner = candidate;
                     continue;
                 }
-                Class<?> winnerType = winner.getReturnType();
+                Class<?> winnerType = winner.getReturnType();       // 方法返回值
                 Class<?> candidateType = candidate.getReturnType();
                 if (candidateType.equals(winnerType)) {
                     if (!boolean.class.equals(candidateType)) {
@@ -111,9 +115,9 @@ public class Reflector {
                 "Illegal overloaded getter method with ambiguous type for property ''{0}'' in class ''{1}''. This breaks the JavaBeans specification and can cause unpredictable results.",
                 name, method.getDeclaringClass().getName()))
                 : new MethodInvoker(method);
-        getMethods.put(name, invoker);
+        getMethods.put(name, invoker);  // 属性名和MethodInvoker加入
         Type returnType = TypeParameterResolver.resolveReturnType(method, type);
-        getTypes.put(name, typeToClass(returnType));
+        getTypes.put(name, typeToClass(returnType));        // 将返回值加入
     }
 
     private void addSetMethods(Method[] methods) {
@@ -204,14 +208,16 @@ public class Reflector {
         return result;
     }
 
+    // 处理类中定义的所有字段，将处理后的字段信息添加到对应集合
     private void addFields(Class<?> clazz) {
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = clazz.getDeclaredFields();     // 全部字段
         for (Field field : fields) {
-            if (!setMethods.containsKey(field.getName())) {
+            if (!setMethods.containsKey(field.getName())) {     // 没有同名的setter方法
                 // issue #379 - removed the check for final because JDK 1.5 allows
                 // modification of final fields through reflection (JSR-133). (JGB)
                 // pr #16 - final static can only be set by the classloader
                 int modifiers = field.getModifiers();
+                // 只过滤final static 字段，final字段在jsr133中可以被反射修改
                 if (!(Modifier.isFinal(modifiers) && Modifier.isStatic(modifiers))) {
                     addSetField(field);
                 }
@@ -221,13 +227,13 @@ public class Reflector {
             }
         }
         if (clazz.getSuperclass() != null) {
-            addFields(clazz.getSuperclass());
+            addFields(clazz.getSuperclass());       // 处理父类
         }
     }
 
     private void addSetField(Field field) {
         if (isValidPropertyName(field.getName())) {
-            setMethods.put(field.getName(), new SetFieldInvoker(field));
+            setMethods.put(field.getName(), new SetFieldInvoker(field));        // 字段封装为Invoker
             Type fieldType = TypeParameterResolver.resolveFieldType(field, type);
             setTypes.put(field.getName(), typeToClass(fieldType));
         }
@@ -255,26 +261,28 @@ public class Reflector {
      * @return An array containing all methods in this class
      */
     private Method[] getClassMethods(Class<?> clazz) {
-        Map<String, Method> uniqueMethods = new HashMap<>();
+        Map<String, Method> uniqueMethods = new HashMap<>();        // 记录类中全部方法的签名
         Class<?> currentClass = clazz;
+        // 从子类开始向父类遍历处理
         while (currentClass != null && currentClass != Object.class) {
             addUniqueMethods(uniqueMethods, currentClass.getDeclaredMethods());
 
             // we also need to look for interface methods -
             // because the class may be abstract
-            Class<?>[] interfaces = currentClass.getInterfaces();
+            Class<?>[] interfaces = currentClass.getInterfaces();       // 记录接口中定义的方法
             for (Class<?> anInterface : interfaces) {
                 addUniqueMethods(uniqueMethods, anInterface.getMethods());
             }
 
-            currentClass = currentClass.getSuperclass();
+            currentClass = currentClass.getSuperclass();        // 获取父类
         }
 
         Collection<Method> methods = uniqueMethods.values();
 
-        return methods.toArray(new Method[0]);
+        return methods.toArray(new Method[0]);      // 转为数组
     }
 
+    // 为每个方法生成唯一的签名放入uniqueMethods
     private void addUniqueMethods(Map<String, Method> uniqueMethods, Method[] methods) {
         for (Method currentMethod : methods) {
             if (!currentMethod.isBridge()) {
@@ -282,7 +290,7 @@ public class Reflector {
                 // check to see if the method is already known
                 // if it is known, then an extended class must have
                 // overridden a method
-                if (!uniqueMethods.containsKey(signature)) {
+                if (!uniqueMethods.containsKey(signature)) {        // 避免父类方法覆盖子类方法
                     uniqueMethods.put(signature, currentMethod);
                 }
             }

@@ -1,6 +1,6 @@
-package com.wjz.mybatis.reflection.property;
+package com.lmmarise._02_reflect.property;
 
-import com.wjz.mybatis.reflection.bridge.Child;
+import com.lmmarise._02_reflect.bridge.Child;
 import org.apache.ibatis.reflection.property.PropertyCopier;
 import org.junit.Test;
 

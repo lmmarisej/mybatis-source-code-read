@@ -1,4 +1,4 @@
-package com.wjz.mybatis.reflection.resolveType;
+package com.lmmarise._02_reflect.resolveType;
 
 import org.apache.ibatis.reflection.TypeParameterResolver;
 

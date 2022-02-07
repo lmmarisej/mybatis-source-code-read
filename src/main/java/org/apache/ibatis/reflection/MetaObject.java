@@ -25,14 +25,16 @@ import java.util.Map;
 
 /**
  * @author Clinton Begin
+ *
+ * 属性表达式的解析。
  */
 public class MetaObject {
 
-    private final Object originalObject;
-    private final ObjectWrapper objectWrapper;
-    private final ObjectFactory objectFactory;
-    private final ObjectWrapperFactory objectWrapperFactory;
-    private final ReflectorFactory reflectorFactory;
+    private final Object originalObject;        // 原始JavaBean
+    private final ObjectWrapper objectWrapper;  // 封装originalObject
+    private final ObjectFactory objectFactory;  // 负责实例化originalObject
+    private final ObjectWrapperFactory objectWrapperFactory;    // 负责创建ObjectWrapper
+    private final ReflectorFactory reflectorFactory;        // 创建并缓存Reflector对象
 
     private MetaObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
         this.originalObject = object;
@@ -106,16 +108,16 @@ public class MetaObject {
     }
 
     public Object getValue(String name) {
-        PropertyTokenizer prop = new PropertyTokenizer(name);
-        if (prop.hasNext()) {
-            MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
+        PropertyTokenizer prop = new PropertyTokenizer(name);       // 解析属性表达式
+        if (prop.hasNext()) {       // 子表达式
+            MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());        // 根据解析后指定的属性，创建MetaObject
             if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
                 return null;
             } else {
                 return metaValue.getValue(prop.getChildren());
             }
         } else {
-            return objectWrapper.get(prop);
+            return objectWrapper.get(prop);     // 通过objectWrapper获取指定的属性值
         }
     }
 

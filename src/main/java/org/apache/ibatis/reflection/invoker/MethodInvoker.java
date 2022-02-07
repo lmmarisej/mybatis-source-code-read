@@ -22,6 +22,8 @@ import java.lang.reflect.Method;
 
 /**
  * @author Clinton Begin
+ *
+ * 针对getter/setter方法这种，要么有参数类型无返回值类型，要么有返回值类型无参数类型的方法。
  */
 public class MethodInvoker implements Invoker {
 
@@ -31,10 +33,10 @@ public class MethodInvoker implements Invoker {
     public MethodInvoker(Method method) {
         this.method = method;
 
-        if (method.getParameterTypes().length == 1) {
+        if (method.getParameterTypes().length == 1) {   // 有参数
             type = method.getParameterTypes()[0];
-        } else {
-            type = method.getReturnType();
+        } else {        // 没参数，或参数较多
+            type = method.getReturnType();      // 使用返回值类型
         }
     }
 

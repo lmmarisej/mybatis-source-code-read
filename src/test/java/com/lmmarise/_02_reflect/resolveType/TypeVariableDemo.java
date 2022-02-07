@@ -1,4 +1,4 @@
-package com.wjz.mybatis.reflection.resolveType;
+package com.lmmarise._02_reflect.resolveType;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;

@@ -25,9 +25,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Clinton Begin
+ *
+ * 通过Reflector和PropertyTokenizer组合使用，实现对复杂的属性表达式的解析，实现了获取指定属性描述信息的功能。
  */
 public class MetaClass {
 
@@ -39,15 +43,17 @@ public class MetaClass {
         this.reflector = reflectorFactory.findForClass(type);
     }
 
+    // 静态构造
     public static MetaClass forClass(Class<?> type, ReflectorFactory reflectorFactory) {
         return new MetaClass(type, reflectorFactory);
     }
 
     public MetaClass metaClassForProperty(String name) {
-        Class<?> propType = reflector.getGetterType(name);
-        return MetaClass.forClass(propType, reflectorFactory);
+        Class<?> propType = reflector.getGetterType(name);      // 指定属性对应的Class对象
+        return MetaClass.forClass(propType, reflectorFactory);  // 为该属性创建MetaClass对象
     }
 
+    // 委托给buildProperty实现
     public String findProperty(String name) {
         StringBuilder prop = buildProperty(name, new StringBuilder());
         return prop.length() > 0 ? prop.toString() : null;
@@ -94,17 +100,18 @@ public class MetaClass {
     }
 
     private Class<?> getGetterType(PropertyTokenizer prop) {
-        Class<?> type = reflector.getGetterType(prop.getName());
-        if (prop.getIndex() != null && Collection.class.isAssignableFrom(type)) {
-            Type returnType = getGenericGetterType(prop.getName());
-            if (returnType instanceof ParameterizedType) {
+        Class<?> type = reflector.getGetterType(prop.getName());        // 属性类型
+        if (prop.getIndex() != null && Collection.class.isAssignableFrom(type)) {   // 有下标，且Getter属性返回类型是集合类型
+            Type returnType = getGenericGetterType(prop.getName()); // 解析属性类型
+            if (returnType instanceof ParameterizedType) {      // 带有泛型的类型
+                // 类型内部的参数化类型 比如Map<K,V>里面的K，V类型
                 Type[] actualTypeArguments = ((ParameterizedType) returnType).getActualTypeArguments();
-                if (actualTypeArguments != null && actualTypeArguments.length == 1) {
+                if (actualTypeArguments != null && actualTypeArguments.length == 1) {       // 有且只有一个泛型
                     returnType = actualTypeArguments[0];
                     if (returnType instanceof Class) {
                         type = (Class<?>) returnType;
-                    } else if (returnType instanceof ParameterizedType) {
-                        type = (Class<?>) ((ParameterizedType) returnType).getRawType();
+                    } else if (returnType instanceof ParameterizedType) {   // 泛型中的泛型类型
+                        type = (Class<?>) ((ParameterizedType) returnType).getRawType();    // 类的原始类型，一般都是Class
                     }
                 }
             }
@@ -115,16 +122,16 @@ public class MetaClass {
     private Type getGenericGetterType(String propertyName) {
         try {
             Invoker invoker = reflector.getGetInvoker(propertyName);
-            if (invoker instanceof MethodInvoker) {
+            if (invoker instanceof MethodInvoker) {     // MethodInvoker表示该方法时getter或setter方法
                 Field declaredMethod = MethodInvoker.class.getDeclaredField("method");
                 declaredMethod.setAccessible(true);
-                Method method = (Method) declaredMethod.get(invoker);
-                return TypeParameterResolver.resolveReturnType(method, reflector.getType());
-            } else if (invoker instanceof GetFieldInvoker) {
+                Method method = (Method) declaredMethod.get(invoker);       // 获取包装的方法
+                return TypeParameterResolver.resolveReturnType(method, reflector.getType());    // 获取返回值类型
+            } else if (invoker instanceof GetFieldInvoker) {        // 不是getter/setter方法，直接字段
                 Field declaredField = GetFieldInvoker.class.getDeclaredField("field");
                 declaredField.setAccessible(true);
                 Field field = (Field) declaredField.get(invoker);
-                return TypeParameterResolver.resolveFieldType(field, reflector.getType());
+                return TypeParameterResolver.resolveFieldType(field, reflector.getType());      // 获取字段类型
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             // Ignored
@@ -132,6 +139,7 @@ public class MetaClass {
         return null;
     }
 
+    // 检测链式调用的属性是否都是setter
     public boolean hasSetter(String name) {
         PropertyTokenizer prop = new PropertyTokenizer(name);
         if (prop.hasNext()) {
@@ -169,16 +177,19 @@ public class MetaClass {
     }
 
     private StringBuilder buildProperty(String name, StringBuilder builder) {
+        // 对传入的字符串分词
         PropertyTokenizer prop = new PropertyTokenizer(name);
-        if (prop.hasNext()) {
+        if (prop.hasNext()) {       // 子表达式
             String propertyName = reflector.findPropertyName(prop.getName());
             if (propertyName != null) {
                 builder.append(propertyName);
                 builder.append(".");
                 MetaClass metaProp = metaClassForProperty(propertyName);
-                metaProp.buildProperty(prop.getChildren(), builder);
+                metaProp.buildProperty(prop.getChildren(), builder);        // 递归处理
             }
-        } else {
+        }
+        // 出口
+        else {
             String propertyName = reflector.findPropertyName(name);
             if (propertyName != null) {
                 builder.append(propertyName);

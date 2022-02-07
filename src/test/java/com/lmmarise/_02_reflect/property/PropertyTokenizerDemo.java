@@ -1,4 +1,4 @@
-package com.wjz.mybatis.reflection.property;
+package com.lmmarise._02_reflect.property;
 
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 

@@ -1,4 +1,4 @@
-package com.wjz.mybatis.reflection.bridge;
+package com.lmmarise._02_reflect.bridge;
 
 import java.util.ArrayList;
 import java.util.List;

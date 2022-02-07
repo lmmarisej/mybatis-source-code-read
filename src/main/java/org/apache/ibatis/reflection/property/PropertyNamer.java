@@ -21,6 +21,8 @@ import java.util.Locale;
 
 /**
  * @author Clinton Begin
+ *
+ * 方法名到属性名的转换。
  */
 public final class PropertyNamer {
 
@@ -28,6 +30,7 @@ public final class PropertyNamer {
         // Prevent Instantiation of Static Class
     }
 
+    // 截取方法名，获取属性名
     public static String methodToProperty(String name) {
         if (name.startsWith("is")) {
             name = name.substring(2);
@@ -44,6 +47,7 @@ public final class PropertyNamer {
         return name;
     }
 
+    // 检测方法名是否对应属性名
     public static boolean isProperty(String name) {
         return isGetter(name) || isSetter(name);
     }

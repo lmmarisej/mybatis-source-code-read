@@ -23,33 +23,38 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ *
+ * 对类级别的元信息的封装和处理，抽象了对象的属性信息，提供了查询、更新属性的方法。
  */
 public interface ObjectWrapper {
 
+    // 直接获取getter返回值，对于集合直接通过下标获取返回值
     Object get(PropertyTokenizer prop);
 
     void set(PropertyTokenizer prop, Object value);
 
+    // 查找属性表达式指定的属性，第二个参数表示是否忽略表达式中的下划线
     String findProperty(String name, boolean useCamelCaseMapping);
 
-    String[] getGetterNames();
+    String[] getGetterNames();      // 可写属性的名称集合
 
     String[] getSetterNames();
 
-    Class<?> getSetterType(String name);
+    Class<?> getSetterType(String name);    // 解析setter方法的参数类型
 
-    Class<?> getGetterType(String name);
+    Class<?> getGetterType(String name);    // 解析getter方法的返回值类型
 
-    boolean hasSetter(String name);
+    boolean hasSetter(String name); // 判断属性表达式指定的属性是否有setter方法
 
     boolean hasGetter(String name);
 
+    // 为属性表达式指定的属性创建MetaObject对象
     MetaObject instantiatePropertyValue(String name, PropertyTokenizer prop, ObjectFactory objectFactory);
 
-    boolean isCollection();
+    boolean isCollection();     // 封装的对象是否为集合
 
-    void add(Object element);
+    void add(Object element);   // 调用集合的add方法
 
-    <E> void addAll(List<E> element);
+    <E> void addAll(List<E> element);       // 调用集合的addAll
 
 }

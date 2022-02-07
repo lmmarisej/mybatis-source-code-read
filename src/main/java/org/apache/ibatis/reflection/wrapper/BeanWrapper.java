@@ -38,7 +38,7 @@ public class BeanWrapper extends BaseWrapper {
 
     @Override
     public Object get(PropertyTokenizer prop) {
-        if (prop.getIndex() != null) {
+        if (prop.getIndex() != null) {      // 存在索引信息，表示表达式中的name部分为集合类型
             Object collection = resolveCollection(prop, object);
             return getCollectionValue(prop, collection);
         } else {
@@ -144,8 +144,10 @@ public class BeanWrapper extends BaseWrapper {
         MetaObject metaValue;
         Class<?> type = getSetterType(prop.getName());
         try {
+            // 反射创建属性类型实例
             Object newObject = objectFactory.create(type);
             metaValue = MetaObject.forObject(newObject, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(), metaObject.getReflectorFactory());
+            // 属性对象，设置到对应的属性或集合中
             set(prop, newObject);
         } catch (Exception e) {
             throw new ReflectionException("Cannot set value of property '" + name + "' because '" + name + "' is null and cannot be instantiated on instance of " + type.getName() + ". Cause:" + e.toString(), e);

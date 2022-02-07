@@ -1,6 +1,6 @@
-package com.wjz.mybatis.reflection;
+package com.lmmarise._02_reflect;
 
-import com.wjz.mybatis.reflection.bridge.Child;
+import com.lmmarise._02_reflect.bridge.Child;
 import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.Reflector;
 import org.apache.ibatis.reflection.ReflectorFactory;
