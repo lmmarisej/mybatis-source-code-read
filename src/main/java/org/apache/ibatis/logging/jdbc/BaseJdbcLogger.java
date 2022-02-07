@@ -31,19 +31,24 @@ import java.util.stream.Collectors;
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
+ *
+ * 通过动态代理，将开发阶段的JDBC操作通过指定的日志框架打印出来。
  */
 public abstract class BaseJdbcLogger {
 
+    // 记录prepareStatement中定义的常用set方法
     protected static final Set<String> SET_METHODS;
+    // PreparedStatement接口与Statement接口中与SQL语句相关的方法
     protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
 
+    // 存储column的名字与值的对应
     private final Map<Object, Object> columnMap = new HashMap<>();
 
     private final List<Object> columnNames = new ArrayList<>();
     private final List<Object> columnValues = new ArrayList<>();
 
-    protected final Log statementLog;
-    protected final int queryStack;
+    protected final Log statementLog;       // 输出日志的对象
+    protected final int queryStack;         // 记录SQL层数，格式化输出SQL
 
     /*
      * Default constructor

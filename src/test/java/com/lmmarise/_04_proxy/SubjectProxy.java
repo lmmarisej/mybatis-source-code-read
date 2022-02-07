@@ -1,4 +1,4 @@
-package com.wjz.mybatis.proxy;
+package com.lmmarise._04_proxy;
 
 public class SubjectProxy {
 

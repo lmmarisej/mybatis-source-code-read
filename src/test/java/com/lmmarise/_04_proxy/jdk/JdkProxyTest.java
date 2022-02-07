@@ -1,12 +1,13 @@
-package com.wjz.mybatis.proxy.jdk;
+package com.lmmarise._04_proxy.jdk;
 
 //import java.lang.reflect.InvocationHandler;
 //import java.lang.reflect.Method;
 //import java.lang.reflect.Proxy;
 
-import com.wjz.mybatis.proxy.Subject;
-import com.wjz.mybatis.proxy.SubjectImpl;
+import com.lmmarise._04_proxy.Subject;
+import com.lmmarise._04_proxy.SubjectImpl;
 import org.junit.Test;
+import com.lmmarise._04_proxy.jdk.CustomInvokerHandler;
 
 /**
  * Jdk动态代理：Jdk动态生成Class字节，指定类加载器加载Class字节生成Java对象（代理对象），将InvokerHandler作为构造参数传入
@@ -31,7 +32,7 @@ public class JdkProxyTest {
 		private static Method method;
 		
 		static {
-			method = Class.forName("com.wjz.mybatis.proxy.Subject").getMethod("opertion", new Class[0]);
+			method = Class.forName("com.lmmarise._04_proxy.Subject").getMethod("opertion", new Class[0]);
 		}
 		
 		protected $Proxy4(InvocationHandler h) {

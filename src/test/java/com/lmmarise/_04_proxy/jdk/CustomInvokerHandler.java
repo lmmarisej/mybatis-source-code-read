@@ -1,4 +1,4 @@
-package com.wjz.mybatis.proxy.jdk;
+package com.lmmarise._04_proxy.jdk;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

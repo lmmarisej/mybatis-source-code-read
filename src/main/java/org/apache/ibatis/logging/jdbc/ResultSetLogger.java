@@ -37,11 +37,11 @@ import java.util.StringJoiner;
  */
 public final class ResultSetLogger extends BaseJdbcLogger implements InvocationHandler {
 
-    private static final Set<Integer> BLOB_TYPES = new HashSet<>();
-    private boolean first = true;
-    private int rows;
-    private final ResultSet rs;
-    private final Set<Integer> blobColumns = new HashSet<>();
+    private static final Set<Integer> BLOB_TYPES = new HashSet<>();     // 超大长度类型
+    private boolean first = true;       // ResultSet结果集的第一行
+    private int rows;       // 统计行数
+    private final ResultSet rs;     // 真正的ResultSet对象
+    private final Set<Integer> blobColumns = new HashSet<>();       // 超大字段的列编号
 
     static {
         BLOB_TYPES.add(Types.BINARY);
@@ -59,6 +59,7 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
         this.rs = rs;
     }
 
+    // 针对ResultSet的next调用做一些后置操作
     @Override
     public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
         try {
@@ -66,23 +67,25 @@ public final class ResultSetLogger extends BaseJdbcLogger implements InvocationH
                 return method.invoke(this, params);
             }
             Object o = method.invoke(rs, params);
-            if ("next".equals(method.getName())) {
-                if ((Boolean) o) {
+            if ("next".equals(method.getName())) {      // 本次调用是next方法
+                if ((Boolean) o) {      // next是否返回了结果
                     rows++;
                     if (isTraceEnabled()) {
                         ResultSetMetaData rsmd = rs.getMetaData();
-                        final int columnCount = rsmd.getColumnCount();
+                        final int columnCount = rsmd.getColumnCount();      // 数据集的列数
                         if (first) {
                             first = false;
-                            printColumnHeaders(rsmd, columnCount);
+                            printColumnHeaders(rsmd, columnCount);      // 第一场会输出表头，填充blobColumns集合，记录超大类型的列
                         }
-                        printColumnValues(columnCount);
+                        printColumnValues(columnCount);     // 输出改行记录，blobColumns列中的数据过大，会将其过滤，不会输出
                     }
-                } else {
-                    debug("     Total: " + rows, false);
+                }
+                // 没有结果了，说明到了最后
+                else {
+                    debug("     Total: " + rows, false);        // 遍历完ResultSet后，输出总函数
                 }
             }
-            clearColumnInfo();
+            clearColumnInfo();      // 清空
             return o;
         } catch (Throwable t) {
             throw ExceptionUtil.unwrapThrowable(t);

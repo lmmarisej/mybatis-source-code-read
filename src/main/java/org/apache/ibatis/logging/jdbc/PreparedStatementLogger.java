@@ -30,6 +30,8 @@ import java.sql.ResultSet;
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
+ *
+ * 为prepareStatement中定义的常用set方法、PreparedStatement接口与Statement接口中与SQL语句相关的方法创建代理。
  */
 public final class PreparedStatementLogger extends BaseJdbcLogger implements InvocationHandler {
 
@@ -46,28 +48,28 @@ public final class PreparedStatementLogger extends BaseJdbcLogger implements Inv
             if (Object.class.equals(method.getDeclaringClass())) {
                 return method.invoke(this, params);
             }
-            if (EXECUTE_METHODS.contains(method.getName())) {
-                if (isDebugEnabled()) {
+            if (EXECUTE_METHODS.contains(method.getName())) {       // 调用的是EXECUTE_METHODS集合中的方法
+                if (isDebugEnabled()) {     // 日志输出参数值和参数类型
                     debug("Parameters: " + getParameterValueString(), true);
                 }
-                clearColumnInfo();
+                clearColumnInfo();      // 清除column名称与值的集合
                 if ("executeQuery".equals(method.getName())) {
-                    ResultSet rs = (ResultSet) method.invoke(statement, params);
+                    ResultSet rs = (ResultSet) method.invoke(statement, params);        // 调用executeQuery，为ResultSet创建代理
                     return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
                 } else {
-                    return method.invoke(statement, params);
+                    return method.invoke(statement, params);        // 直接返回结果
                 }
             } else if (SET_METHODS.contains(method.getName())) {
                 if ("setNull".equals(method.getName())) {
-                    setColumn(params[0], null);
+                    setColumn(params[0], null);      // 记录column名称与值的集合
                 } else {
                     setColumn(params[0], params[1]);
                 }
                 return method.invoke(statement, params);
-            } else if ("getResultSet".equals(method.getName())) {
+            } else if ("getResultSet".equals(method.getName())) {       // 为getResultSet的ResultSet创建代理
                 ResultSet rs = (ResultSet) method.invoke(statement, params);
                 return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
-            } else if ("getUpdateCount".equals(method.getName())) {
+            } else if ("getUpdateCount".equals(method.getName())) {     // 调用getUpdateCount，通过日志框架输出其结果
                 int updateCount = (Integer) method.invoke(statement, params);
                 if (updateCount != -1) {
                     debug("   Updates: " + updateCount, false);

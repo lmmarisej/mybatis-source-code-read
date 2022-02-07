@@ -65,12 +65,13 @@ public class WeakCache implements Cache {
     @Override
     public Object getObject(Object key) {
         Object result = null;
-        @SuppressWarnings("unchecked") // assumed delegate cache is totally managed by this cache
+        // assumed delegate cache is totally managed by this cache
+        // 先从缓存中找；weakReference在垃圾回收器线程扫描它所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存。
         WeakReference<Object> weakReference = (WeakReference<Object>) delegate.getObject(key);
         if (weakReference != null) {
             result = weakReference.get();
             if (result == null) {
-                delegate.removeObject(key);
+                delegate.removeObject(key);     // 从缓存中删除该缓存对象的key
             } else {
                 synchronized (hardLinksToAvoidGarbageCollection) {
                     hardLinksToAvoidGarbageCollection.addFirst(result);

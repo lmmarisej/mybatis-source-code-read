@@ -1,4 +1,4 @@
-package com.wjz.mybatis.logging;
+package com.lmmarise._03_loggin;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;

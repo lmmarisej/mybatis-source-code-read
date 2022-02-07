@@ -25,10 +25,10 @@ import java.util.logging.Logger;
  */
 public class Jdk14LoggingImpl implements Log {
 
-    private final Logger log;
+    private final Logger log;       // 底层封装的java.util.logging.Logger对象
 
     public Jdk14LoggingImpl(String clazz) {
-        log = Logger.getLogger(clazz);
+        log = Logger.getLogger(clazz);      // 初始化log
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Jdk14LoggingImpl implements Log {
 
     @Override
     public void error(String s) {
-        log.log(Level.SEVERE, s);
+        log.log(Level.SEVERE, s);       // 来自Mybatis层面的日志请求委托给log
     }
 
     @Override

@@ -30,10 +30,12 @@ import java.sql.Statement;
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
+ *
+ * JDK动态代理
  */
 public final class ConnectionLogger extends BaseJdbcLogger implements InvocationHandler {
 
-    private final Connection connection;
+    private final Connection connection;        // 业务对象
 
     private ConnectionLogger(Connection conn, Log statementLog, int queryStack) {
         super(statementLog, queryStack);
@@ -44,9 +46,11 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
     public Object invoke(Object proxy, Method method, Object[] params)
             throws Throwable {
         try {
+            // 从Object继承的方法直接调用
             if (Object.class.equals(method.getDeclaringClass())) {
                 return method.invoke(this, params);
             }
+            // 如果调用这几个方法，为其创建代理后调用
             if ("prepareStatement".equals(method.getName()) || "prepareCall".equals(method.getName())) {
                 if (isDebugEnabled()) {
                     debug(" Preparing: " + removeExtraWhitespace((String) params[0]), true);
@@ -59,6 +63,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
                 stmt = StatementLogger.newInstance(stmt, statementLog, queryStack);
                 return stmt;
             } else {
+                // 其它方法直接使用connection相应的方法
                 return method.invoke(connection, params);
             }
         } catch (Throwable t) {
@@ -73,6 +78,8 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
      * @param statementLog the statement log
      * @param queryStack   the query stack
      * @return the connection with logging
+     *
+     * 创建动态代理后的对象。
      */
     public static Connection newInstance(Connection conn, Log statementLog, int queryStack) {
         InvocationHandler handler = new ConnectionLogger(conn, statementLog, queryStack);
