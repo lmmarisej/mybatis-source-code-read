@@ -32,6 +32,10 @@ import java.sql.SQLException;
  *
  * @author Clinton Begin
  * @see ManagedTransactionFactory
+ *
+ * 事务的提交和回滚都是空实现，依靠容器来控制。
+ *
+ * 例如，Mybatis通常和Spring集成，其事务的控制交给Spring来管理。
  */
 public class ManagedTransaction implements Transaction {
 

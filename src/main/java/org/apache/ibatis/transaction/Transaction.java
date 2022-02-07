@@ -23,6 +23,8 @@ import java.sql.SQLException;
  * Handles the connection lifecycle that comprises: its creation, preparation, commit/rollback and close.
  *
  * @author Clinton Begin
+ *
+ * 对数据库事物进行抽象。
  */
 public interface Transaction {
 
@@ -53,7 +55,7 @@ public interface Transaction {
      *
      * @throws SQLException the SQL exception
      */
-    void close() throws SQLException;
+    void close() throws SQLException;       // 关闭数据库连接
 
     /**
      * Get transaction timeout if set.
@@ -61,6 +63,6 @@ public interface Transaction {
      * @return the timeout
      * @throws SQLException the SQL exception
      */
-    Integer getTimeout() throws SQLException;
+    Integer getTimeout() throws SQLException;       // 获取事物超时时间
 
 }

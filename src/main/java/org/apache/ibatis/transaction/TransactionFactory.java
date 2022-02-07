@@ -25,6 +25,8 @@ import java.util.Properties;
  * Creates {@link Transaction} instances.
  *
  * @author Clinton Begin
+ *
+ * 定义了配置新建TransactionFactory对象的方法，以及创建Transaction对象的方法。
  */
 public interface TransactionFactory {
 
@@ -32,6 +34,8 @@ public interface TransactionFactory {
      * Sets transaction factory custom properties.
      *
      * @param props the new properties
+     *
+     *              配置TransactionFactory对象，完成对TransactionFactory自定义配置。
      */
     default void setProperties(Properties props) {
         // NOP
@@ -44,7 +48,7 @@ public interface TransactionFactory {
      * @return Transaction
      * @since 3.1.0
      */
-    Transaction newTransaction(Connection conn);
+    Transaction newTransaction(Connection conn);        // 在指定的链接上创建Transaction对象
 
     /**
      * Creates a {@link Transaction} out of a datasource.
@@ -54,6 +58,8 @@ public interface TransactionFactory {
      * @param autoCommit Desired autocommit
      * @return Transaction
      * @since 3.1.0
+     *
+     * 从指定的数据源获取连接，并在此连接上创建Transaction对象。
      */
     Transaction newTransaction(DataSource dataSource, TransactionIsolationLevel level, boolean autoCommit);
 

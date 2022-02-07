@@ -33,15 +33,17 @@ import java.sql.SQLException;
  *
  * @author Clinton Begin
  * @see JdbcTransactionFactory
+ *
+ * 依赖于 Jdbc Connection 控制事物的提交和回滚。
  */
 public class JdbcTransaction implements Transaction {
 
     private static final Log log = LogFactory.getLog(JdbcTransaction.class);
 
-    protected Connection connection;
-    protected DataSource dataSource;
-    protected TransactionIsolationLevel level;
-    protected boolean autoCommit;
+    protected Connection connection;        // 事物对应的数据库连接
+    protected DataSource dataSource;        // 数据库连接所属的DataSource
+    protected TransactionIsolationLevel level;      // 事务隔离级别
+    protected boolean autoCommit;       // 是否自动提交
 
     public JdbcTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
         dataSource = ds;
