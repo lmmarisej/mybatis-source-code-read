@@ -78,6 +78,8 @@ import java.util.function.BiFunction;
 
 /**
  * @author Clinton Begin
+ *
+ * 在Mybatis初始化过程中，所有的配置文件都被解析为对象，存储找Configuration对象中。
  */
 public class Configuration {
 

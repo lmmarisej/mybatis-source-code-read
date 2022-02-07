@@ -19,6 +19,7 @@ import org.apache.ibatis.domain.blog.Blog;
 
 public interface BlogMapper {
 
+    // selectBlog代表配置文件中SQL语句的id
     Blog selectBlog(int id);
 
     Blog selectBlogUsingConstructor(int id);

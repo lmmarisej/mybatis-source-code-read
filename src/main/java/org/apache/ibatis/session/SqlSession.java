@@ -28,6 +28,8 @@ import java.util.Map;
  * Through this interface you can execute commands, get mappers and manage transactions.
  *
  * @author Clinton Begin
+ *
+ * 负责完成对数据库的操作。
  */
 public interface SqlSession extends Closeable {
 
@@ -44,8 +46,8 @@ public interface SqlSession extends Closeable {
      * Retrieve a single row mapped from the statement key and parameter.
      *
      * @param <T>       the returned object type
-     * @param statement Unique identifier matching the statement to use.
-     * @param parameter A parameter object to pass to the statement.
+     * @param statement Unique identifier matching the statement to use.    SQL语句的id
+     * @param parameter A parameter object to pass to the statement.    参数
      * @return Mapped object
      */
     <T> T selectOne(String statement, Object parameter);
@@ -298,6 +300,8 @@ public interface SqlSession extends Closeable {
      * @param <T>  the mapper type
      * @param type Mapper interface class
      * @return a mapper bound to this SqlSession
+     *
+     * 为指定的接口创建实例，根据接口名作为id，从配置文件中检索SQL语句，动态代理为接口的实现。
      */
     <T> T getMapper(Class<T> type);
 

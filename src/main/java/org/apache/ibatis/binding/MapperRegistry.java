@@ -26,16 +26,21 @@ import java.util.*;
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
+ *
+ * 是Mapper接口及其对应的代理对象工厂的注册中心。
  */
 public class MapperRegistry {
 
+    // 包含了Mybatis所有的配置信息
     private final Configuration config;
+    // 记录了Mapper接口与对应的MapperProxyFactory之间的关系
     private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
 
     public MapperRegistry(Configuration config) {
         this.config = config;
     }
 
+    // 在需要执行某条SQL的时候，需要先获取mapper的代理对象
     @SuppressWarnings("unchecked")
     public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
         final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
@@ -53,7 +58,8 @@ public class MapperRegistry {
         return knownMappers.containsKey(type);
     }
 
-    public <T> void addMapper(Class<T> type) {
+    // Mybatis在初始化过程中读取mapper接口中信息，对knownMappers集合进行填充
+    public <T> void addMapper(Class<T> type) {      // type是mapper接口
         if (type.isInterface()) {
             if (hasMapper(type)) {
                 throw new BindingException("Type " + type + " is already known to the MapperRegistry.");
@@ -65,7 +71,7 @@ public class MapperRegistry {
                 // otherwise the binding may automatically be attempted by the
                 // mapper parser. If the type is already known, it won't try.
                 MapperAnnotationBuilder parser = new MapperAnnotationBuilder(config, type);
-                parser.parse();
+                parser.parse();     // XML的解析和注解的处理
                 loadCompleted = true;
             } finally {
                 if (!loadCompleted) {

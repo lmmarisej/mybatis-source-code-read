@@ -25,10 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Lasse Voss
+ *
+ * 主要负责创建代理对象。
  */
 public class MapperProxyFactory<T> {
 
+    // mapper接口
     private final Class<T> mapperInterface;
+    // 代理方法的缓存
     private final Map<Method, MapperMethodInvoker> methodCache = new ConcurrentHashMap<>();
 
     public MapperProxyFactory(Class<T> mapperInterface) {
@@ -45,10 +49,12 @@ public class MapperProxyFactory<T> {
 
     @SuppressWarnings("unchecked")
     protected T newInstance(MapperProxy<T> mapperProxy) {
+        // 创建实现了mapperInterface接口的代理对象
         return (T) Proxy.newProxyInstance(mapperInterface.getClassLoader(), new Class[]{mapperInterface}, mapperProxy);
     }
 
     public T newInstance(SqlSession sqlSession) {
+        // 每次调用都整一个新的mapperProxy对象出来
         final MapperProxy<T> mapperProxy = new MapperProxy<>(sqlSession, mapperInterface, methodCache);
         return newInstance(mapperProxy);
     }

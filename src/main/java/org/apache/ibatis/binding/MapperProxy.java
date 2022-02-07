@@ -33,6 +33,8 @@ import java.util.Map;
 /**
  * @author Clinton Begin
  * @author Eduardo Macarron
+ *
+ * mapper代理的核心逻辑。
  */
 public class MapperProxy<T> implements InvocationHandler, Serializable {
 
@@ -41,9 +43,9 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
             | MethodHandles.Lookup.PACKAGE | MethodHandles.Lookup.PUBLIC;
     private static final Constructor<Lookup> lookupConstructor;
     private static final Method privateLookupInMethod;
-    private final SqlSession sqlSession;
-    private final Class<T> mapperInterface;
-    private final Map<Method, MapperMethodInvoker> methodCache;
+    private final SqlSession sqlSession;        // 关联的sqlSession对象
+    private final Class<T> mapperInterface;     // mapper接口对应的class对象
+    private final Map<Method, MapperMethodInvoker> methodCache;     // key是mapper接口中对应的MapperMethodInvoker对象，value是对应的MapperMethod对象
 
     public MapperProxy(SqlSession sqlSession, Class<T> mapperInterface, Map<Method, MapperMethodInvoker> methodCache) {
         this.sqlSession = sqlSession;
@@ -81,7 +83,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         try {
             if (Object.class.equals(method.getDeclaringClass())) {
-                return method.invoke(this, args);
+                return method.invoke(this, args);       // Object方法直接调用
             } else {
                 return cachedInvoker(method).invoke(proxy, method, args, sqlSession);
             }
@@ -90,8 +92,10 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
         }
     }
 
+    // 从缓存中获取MapperMethodInvoker对象
     private MapperMethodInvoker cachedInvoker(Method method) throws Throwable {
         try {
+            // 从缓存中获取，没有则创建并放入缓存再返回
             return MapUtil.computeIfAbsent(methodCache, method, m -> {
                 if (m.isDefault()) {
                     try {
@@ -128,6 +132,7 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
         return lookupConstructor.newInstance(declaringClass, ALLOWED_MODES).unreflectSpecial(method, declaringClass);
     }
 
+    // 完成参数转换以及SQL语句执行的功能
     interface MapperMethodInvoker {
         Object invoke(Object proxy, Method method, Object[] args, SqlSession sqlSession) throws Throwable;
     }
