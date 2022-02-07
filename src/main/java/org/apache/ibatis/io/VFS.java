@@ -31,12 +31,16 @@ import java.util.List;
  * Provides a very simple API for accessing resources within an application server.
  *
  * @author Ben Gunter
+ *
+ * 虚拟文件系统，用来查找指定路径下的资源
  */
 public abstract class VFS {
     private static final Log log = LogFactory.getLog(VFS.class);
 
     /**
      * The built-in implementations.
+     *
+     * 记录Mybatis提供的默认实现。
      */
     public static final Class<?>[] IMPLEMENTATIONS = {JBoss6VFS.class, DefaultVFS.class};
 
@@ -49,7 +53,7 @@ public abstract class VFS {
      * Singleton instance holder.
      */
     private static class VFSHolder {
-        static final VFS INSTANCE = createVFS();
+        static final VFS INSTANCE = createVFS();        // 单例模式
 
         @SuppressWarnings("unchecked")
         static VFS createVFS() {
@@ -188,6 +192,8 @@ public abstract class VFS {
      * Return true if the {@link VFS} implementation is valid for the current environment.
      *
      * @return true, if is valid
+     *
+     * 负责检测当前VFS对象在当前环境下是否有效。
      */
     public abstract boolean isValid();
 
@@ -200,6 +206,8 @@ public abstract class VFS {
      *                value passed to {@link #getResources(String)} to get the resource URL.
      * @return A list containing the names of the child resources.
      * @throws IOException If I/O errors occur
+     *
+     * 负责查找指定的资源名称列表。
      */
     protected abstract List<String> list(URL url, String forPath) throws IOException;
 

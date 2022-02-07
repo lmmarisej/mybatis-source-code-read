@@ -55,15 +55,15 @@ public class DefaultVFS extends VFS {
 
             // First, try to find the URL of a JAR file containing the requested resource. If a JAR
             // file is found, then we'll list child resources by reading the JAR.
-            URL jarUrl = findJarForResource(url);
+            URL jarUrl = findJarForResource(url);   // url指向的资源在一个Jar包中，获取该jar包对应的URL，否则返回NULL
             if (jarUrl != null) {
                 is = jarUrl.openStream();
                 if (log.isDebugEnabled()) {
                     log.debug("Listing " + url);
                 }
-                resources = listResources(new JarInputStream(is), path);
+                resources = listResources(new JarInputStream(is), path);    // 遍历Jar中的资源，返回以path开头的资源列表
             } else {
-                List<String> children = new ArrayList<>();
+                List<String> children = new ArrayList<>();      // 遍历url指向的目录，将其下资源名称记录到children集合中
                 try {
                     if (isJar(url)) {
                         // Some versions of JBoss VFS might give a JAR stream even if the resource
@@ -143,6 +143,7 @@ public class DefaultVFS extends VFS {
                 }
 
                 // Iterate over immediate children, adding files and recurring into directories
+                // 遍历children集合，递归查找符合条件的资源名称
                 for (String child : children) {
                     String resourcePath = path + "/" + child;
                     resources.add(resourcePath);
@@ -174,6 +175,7 @@ public class DefaultVFS extends VFS {
      */
     protected List<String> listResources(JarInputStream jar, String path) throws IOException {
         // Include the leading and trailing slash when matching names
+        // 给path开始结束添加/
         if (!path.startsWith("/")) {
             path = "/" + path;
         }
@@ -187,7 +189,7 @@ public class DefaultVFS extends VFS {
             if (!entry.isDirectory()) {
                 // Add leading slash if it's missing
                 StringBuilder name = new StringBuilder(entry.getName());
-                if (name.charAt(0) != '/') {
+                if (name.charAt(0) != '/') {        // 开始位置添加/
                     name.insert(0, '/');
                 }
 
@@ -197,7 +199,7 @@ public class DefaultVFS extends VFS {
                         log.debug("Found resource: " + name);
                     }
                     // Trim leading slash
-                    resources.add(name.substring(1));
+                    resources.add(name.substring(1));       // 记录资源名称
                 }
             }
         }

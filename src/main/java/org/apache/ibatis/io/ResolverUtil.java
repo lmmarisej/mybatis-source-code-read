@@ -55,6 +55,8 @@ import java.util.Set;
  *
  * @param <T> the generic type
  * @author Tim Fennell
+ *
+ * 根据指定条件查找指定包下的类。
  */
 public class ResolverUtil<T> {
 
@@ -66,6 +68,8 @@ public class ResolverUtil<T> {
     /**
      * A simple interface that specifies how to test classes to determine if they
      * are to be included in the results produced by the ResolverUtil.
+     *
+     * 包装指定条件。
      */
     public interface Test {
 
@@ -73,8 +77,10 @@ public class ResolverUtil<T> {
          * Will be called repeatedly with candidate classes. Must return True if a class
          * is to be included in the results, false otherwise.
          *
-         * @param type the type
+         * @param type the type  待检测的类。
          * @return true, if successful
+         *
+         * 检测指定的类是否符合条件。
          */
         boolean matches(Class<?> type);
     }
@@ -82,6 +88,8 @@ public class ResolverUtil<T> {
     /**
      * A Test that checks to see if each class is assignable to the provided class. Note
      * that this test will match the parent type itself if it is presented for matching.
+     *
+     * 检测指定类是否继承了parent。
      */
     public static class IsA implements Test {
 
@@ -116,6 +124,8 @@ public class ResolverUtil<T> {
     /**
      * A Test that checks to see if each class is annotated with a specific annotation. If it
      * is, then the test returns true, otherwise false.
+     *
+     * 检测类是否添加了指定注解。
      */
     public static class AnnotatedWith implements Test {
 
@@ -149,12 +159,16 @@ public class ResolverUtil<T> {
 
     /**
      * The set of matches being accumulated.
+     *
+     * 保存找到了符合条件的class。
      */
     private Set<Class<? extends T>> matches = new HashSet<>();
 
     /**
      * The ClassLoader to use when looking for classes. If null then the ClassLoader returned
      * by Thread.currentThread().getContextClassLoader() will be used.
+     *
+     * 记录当前使用的类加载器。
      */
     private ClassLoader classloader;
 
@@ -197,6 +211,8 @@ public class ResolverUtil<T> {
      * @param parent       the class of interface to find subclasses or implementations of
      * @param packageNames one or more package names to scan (including subpackages) for classes
      * @return the resolver util
+     *
+     * 根据是否为指定类型查找包下的符合条件的类。
      */
     public ResolverUtil<T> findImplementations(Class<?> parent, String... packageNames) {
         if (packageNames == null) {
@@ -218,6 +234,8 @@ public class ResolverUtil<T> {
      * @param annotation   the annotation that should be present on matching classes
      * @param packageNames one or more package names to scan (including subpackages) for classes
      * @return the resolver util
+     *
+     * 根据是否为指定类型添加了指定注解查找包下的符合条件的类。
      */
     public ResolverUtil<T> findAnnotated(Class<? extends Annotation> annotation, String... packageNames) {
         if (packageNames == null) {
@@ -241,6 +259,8 @@ public class ResolverUtil<T> {
      * @param test        an instance of {@link Test} that will be used to filter classes
      * @param packageName the name of the package from which to start scanning for classes, e.g. {@code net.sourceforge.stripes}
      * @return the resolver util
+     *
+     * 遍历指定包下的类，筛选符合条件的类。
      */
     public ResolverUtil<T> find(Test test, String packageName) {
         String path = getPackagePath(packageName);
@@ -286,7 +306,7 @@ public class ResolverUtil<T> {
                 log.debug("Checking to see if class " + externalName + " matches criteria [" + test + "]");
             }
 
-            Class<?> type = loader.loadClass(externalName);
+            Class<?> type = loader.loadClass(externalName);     // 加载该类
             if (test.matches(type)) {
                 matches.add((Class<T>) type);
             }

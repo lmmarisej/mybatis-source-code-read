@@ -19,13 +19,15 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
- * A class to wrap access to multiple class loaders making them work as one
+ * A class to wrap access to multiple class loaders making them work as one.
  *
  * @author Clinton Begin
+ *
+ * 包装多个ClassLoader作为一个来使用。
  */
 public class ClassLoaderWrapper {
 
-    ClassLoader defaultClassLoader;
+    ClassLoader defaultClassLoader;     // 应用指定的默认类加载器
     ClassLoader systemClassLoader;
 
     ClassLoaderWrapper() {
@@ -144,17 +146,17 @@ public class ClassLoaderWrapper {
             if (null != cl) {
 
                 // look for the resource as passed in...
-                url = cl.getResource(resource);
+                url = cl.getResource(resource);     // 查找指定资源
 
                 // ...but some class loaders want this leading "/", so we'll add it
                 // and try again if we didn't find the resource
                 if (null == url) {
-                    url = cl.getResource("/" + resource);
+                    url = cl.getResource("/" + resource);       // 加个/再试一次
                 }
 
                 // "It's always in the last place I look for it!"
                 // ... because only an idiot would keep looking for it after finding it, so stop looking already.
-                if (null != url) {
+                if (null != url) {      // 先到先得
                     return url;
                 }
 
