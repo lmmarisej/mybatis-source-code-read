@@ -25,6 +25,8 @@ import java.sql.SQLException;
 
 /**
  * @author Clinton Begin
+ *
+ * 封装真正的数据库连接对象以及其代理对象。
  */
 class PooledConnection implements InvocationHandler {
 
@@ -33,13 +35,13 @@ class PooledConnection implements InvocationHandler {
 
     private final int hashCode;
     private final PooledDataSource dataSource;
-    private final Connection realConnection;
-    private final Connection proxyConnection;
-    private long checkoutTimestamp;
-    private long createdTimestamp;
-    private long lastUsedTimestamp;
-    private int connectionTypeCode;
-    private boolean valid;
+    private final Connection realConnection;        // 真正的数据库连接
+    private final Connection proxyConnection;       // 真正的数据库连接代理对象
+    private long checkoutTimestamp;     // 从连接池中取出该连接时的时间戳
+    private long createdTimestamp;      // 该连接创建的时间戳
+    private long lastUsedTimestamp;     // 最后一次被使用的时间戳
+    private int connectionTypeCode;     // 用数据库URL用户名和密码计算出的hash值，表示该连接所在的连接池
+    private boolean valid;      // 检测当前连接是否有效，避免程序close后，还可以使用
 
     /**
      * Constructor for SimplePooledConnection that uses the Connection and PooledDataSource passed in.
@@ -232,8 +234,8 @@ class PooledConnection implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String methodName = method.getName();
-        if (CLOSE.equals(methodName)) {
-            dataSource.pushConnection(this);
+        if (CLOSE.equals(methodName)) {     // 调用close方法
+            dataSource.pushConnection(this);        // 归还连接，而非关闭
             return null;
         }
         try {
@@ -242,7 +244,7 @@ class PooledConnection implements InvocationHandler {
                 // throw an SQLException instead of a Runtime
                 checkConnection();
             }
-            return method.invoke(realConnection, args);
+            return method.invoke(realConnection, args);     // 调用真正数据库连接对象的对应方法
         } catch (Throwable t) {
             throw ExceptionUtil.unwrapThrowable(t);
         }

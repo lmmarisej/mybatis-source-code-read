@@ -33,24 +33,24 @@ import java.util.logging.Logger;
  */
 public class UnpooledDataSource implements DataSource {
 
-    private ClassLoader driverClassLoader;
-    private Properties driverProperties;
-    private static Map<String, Driver> registeredDrivers = new ConcurrentHashMap<>();
+    private ClassLoader driverClassLoader;      // 加载数据库驱动的类加载器
+    private Properties driverProperties;        // 数据库连接驱动相关的配置
+    private static Map<String, Driver> registeredDrivers = new ConcurrentHashMap<>();       // 缓存所有已注册的数据库连接驱动
 
-    private String driver;
-    private String url;
-    private String username;
-    private String password;
+    private String driver;      // 数据库连接驱动名称
+    private String url;         // 数据库url
+    private String username;    // 用户名
+    private String password;    // 密码
 
-    private Boolean autoCommit;
-    private Integer defaultTransactionIsolationLevel;
+    private Boolean autoCommit; // 自动提交
+    private Integer defaultTransactionIsolationLevel;   // 事物隔离级别
     private Integer defaultNetworkTimeout;
 
     static {
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();
-            registeredDrivers.put(driver.getClass().getName(), driver);
+            registeredDrivers.put(driver.getClass().getName(), driver); // 名称与驱动对应
         }
     }
 
@@ -214,9 +214,9 @@ public class UnpooledDataSource implements DataSource {
     }
 
     private Connection doGetConnection(Properties properties) throws SQLException {
-        initializeDriver();
-        Connection connection = DriverManager.getConnection(url, properties);
-        configureConnection(connection);
+        initializeDriver();     // 初始化数据库驱动
+        Connection connection = DriverManager.getConnection(url, properties);   // 创建真正的数据库连接
+        configureConnection(connection);        // 配置连接是否自动提交和隔离级别
         return connection;
     }
 
@@ -231,7 +231,9 @@ public class UnpooledDataSource implements DataSource {
                 }
                 // DriverManager requires the driver to be loaded via the system ClassLoader.
                 // http://www.kfu.com/~nsayer/Java/dyn-jdbc.html
+                // 创建指定的Driver对象
                 Driver driverInstance = (Driver) driverType.getDeclaredConstructor().newInstance();
+                // 注册到DriverManager
                 DriverManager.registerDriver(new DriverProxy(driverInstance));
                 registeredDrivers.put(driver, driverInstance);
             } catch (Exception e) {
@@ -244,10 +246,12 @@ public class UnpooledDataSource implements DataSource {
         if (defaultNetworkTimeout != null) {
             conn.setNetworkTimeout(Executors.newSingleThreadExecutor(), defaultNetworkTimeout);
         }
+        // 设置事务是否自动提交
         if (autoCommit != null && autoCommit != conn.getAutoCommit()) {
             conn.setAutoCommit(autoCommit);
         }
         if (defaultTransactionIsolationLevel != null) {
+            // 设置事物隔离级别
             conn.setTransactionIsolation(defaultTransactionIsolationLevel);
         }
     }
