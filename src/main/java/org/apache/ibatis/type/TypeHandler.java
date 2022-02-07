@@ -22,9 +22,14 @@ import java.sql.SQLException;
 
 /**
  * @author Clinton Begin
+ *
+ * 用于完成单个参数与单个列值的类型转换。
+ *
+ * PreparedStatement为SQL语句绑定参数时，需要从Java类型转换成JDBC类型，从结果集中获取数据时，需要从JDBC类型转换成Java类型。
  */
 public interface TypeHandler<T> {
 
+    // 为SQL绑定数据，从JDBC类型转换成Java类型
     void setParameter(PreparedStatement ps, int i, T parameter, JdbcType jdbcType) throws SQLException;
 
     /**
@@ -34,6 +39,8 @@ public interface TypeHandler<T> {
      * @param columnName Column name, when configuration <code>useColumnLabel</code> is <code>false</code>
      * @return the result
      * @throws SQLException the SQL exception
+     *
+     * 从ResultSet中获取数据，从Java类型转换成JDBC类型
      */
     T getResult(ResultSet rs, String columnName) throws SQLException;
 

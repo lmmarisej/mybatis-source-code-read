@@ -25,6 +25,8 @@ import java.util.*;
 
 /**
  * @author Clinton Begin
+ *
+ * 完成表名、列名的别名注册和管理。
  */
 public class TypeAliasRegistry {
 
@@ -116,6 +118,7 @@ public class TypeAliasRegistry {
         registerAliases(packageName, Object.class);
     }
 
+    // 扫描指定包下的所有类，为指定类的子类添加别名
     public void registerAliases(String packageName, Class<?> superType) {
         ResolverUtil<Class<?>> resolverUtil = new ResolverUtil<>();
         resolverUtil.find(new ResolverUtil.IsA(superType), packageName);
@@ -123,6 +126,7 @@ public class TypeAliasRegistry {
         for (Class<?> type : typeSet) {
             // Ignore inner classes and interfaces (including package-info.java)
             // Skip also inner classes. See issue #6
+            // 过滤内部类、匿名类、接口
             if (!type.isAnonymousClass() && !type.isInterface() && !type.isMemberClass()) {
                 registerAlias(type);
             }
@@ -131,11 +135,11 @@ public class TypeAliasRegistry {
 
     public void registerAlias(Class<?> type) {
         String alias = type.getSimpleName();
-        Alias aliasAnnotation = type.getAnnotation(Alias.class);
+        Alias aliasAnnotation = type.getAnnotation(Alias.class);        // 读取Alias注解
         if (aliasAnnotation != null) {
             alias = aliasAnnotation.value();
         }
-        registerAlias(alias, type);
+        registerAlias(alias, type);     // 不存在则注册
     }
 
     public void registerAlias(String alias, Class<?> value) {
@@ -143,11 +147,12 @@ public class TypeAliasRegistry {
             throw new TypeException("The parameter alias cannot be null");
         }
         // issue #748
-        String key = alias.toLowerCase(Locale.ENGLISH);
+        String key = alias.toLowerCase(Locale.ENGLISH);     // 别名小写
+        // 别名是否存在
         if (typeAliases.containsKey(key) && typeAliases.get(key) != null && !typeAliases.get(key).equals(value)) {
             throw new TypeException("The alias '" + alias + "' is already mapped to the value '" + typeAliases.get(key).getName() + "'.");
         }
-        typeAliases.put(key, value);
+        typeAliases.put(key, value);        // 注册别名
     }
 
     public void registerAlias(String alias, String value) {

@@ -28,13 +28,13 @@ public class IntegerTypeHandler extends BaseTypeHandler<Integer> {
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, Integer parameter, JdbcType jdbcType)
             throws SQLException {
-        ps.setInt(i, parameter);
+        ps.setInt(i, parameter);        // 参数绑定
     }
 
     @Override
     public Integer getNullableResult(ResultSet rs, String columnName)
             throws SQLException {
-        int result = rs.getInt(columnName);
+        int result = rs.getInt(columnName);     // 获取指定列值
         return result == 0 && rs.wasNull() ? null : result;
     }
 

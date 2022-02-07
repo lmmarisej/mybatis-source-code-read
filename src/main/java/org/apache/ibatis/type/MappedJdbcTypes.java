@@ -20,6 +20,8 @@ import java.lang.annotation.*;
 /**
  * The annotation that specify jdbc types to map {@link TypeHandler}.
  *
+ * 注明该TypeHandler能处理的JDBCType类型集合。
+ *
  * <p>
  * <b>How to use:</b>
  * <pre>
