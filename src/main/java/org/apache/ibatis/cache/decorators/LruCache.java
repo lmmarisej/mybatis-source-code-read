@@ -24,11 +24,13 @@ import java.util.Map;
  * Lru (least recently used) cache decorator.
  *
  * @author Clinton Begin
+ *
+ * 清除时选择用得最少的缓存进行清除。
  */
 public class LruCache implements Cache {
 
     private final Cache delegate;
-    private Map<Object, Object> keyMap;
+    private Map<Object, Object> keyMap;     // 有序的map，记录key的使用情况
     private Object eldestKey;
 
     public LruCache(Cache delegate) {
@@ -47,14 +49,16 @@ public class LruCache implements Cache {
     }
 
     public void setSize(final int size) {
+        // true表示LinkedHashMap的排序规则将根据访问key的次数调整
         keyMap = new LinkedHashMap<Object, Object>(size, .75F, true) {
             private static final long serialVersionUID = 4267176411845948333L;
 
+            // 当put方法被调用时会触发
             @Override
             protected boolean removeEldestEntry(Map.Entry<Object, Object> eldest) {
                 boolean tooBig = size() > size;
                 if (tooBig) {
-                    eldestKey = eldest.getKey();
+                    eldestKey = eldest.getKey();        // 获取使用的最少的超过size的部分的key
                 }
                 return tooBig;
             }
@@ -85,9 +89,9 @@ public class LruCache implements Cache {
     }
 
     private void cycleKeyList(Object key) {
-        keyMap.put(key, key);
+        keyMap.put(key, key);       // key进入维护队列
         if (eldestKey != null) {
-            delegate.removeObject(eldestKey);
+            delegate.removeObject(eldestKey);       // 移除最少使用的缓存
             eldestKey = null;
         }
     }

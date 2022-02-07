@@ -24,6 +24,8 @@ import java.io.*;
 
 /**
  * @author Clinton Begin
+ *
+ * 提供了将value对象序列化的功能，只有支持序列化的value才有资格被缓存。
  */
 public class SerializedCache implements Cache {
 
@@ -78,6 +80,7 @@ public class SerializedCache implements Cache {
         return delegate.equals(obj);
     }
 
+    // 转为byte[]进行缓存
     private byte[] serialize(Serializable value) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              ObjectOutputStream oos = new ObjectOutputStream(bos)) {

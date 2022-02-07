@@ -24,6 +24,10 @@ import java.util.StringJoiner;
 
 /**
  * @author Clinton Begin
+ *
+ * 用于确定一个缓存的唯一性。由于存在动态SQL，因此需要综合多种因素来判断是否为同一个缓存。
+ *
+ * 可以向CacheKey中添加多个对象，共同确定一个CacheKey是否相同。
  */
 public class CacheKey implements Cloneable, Serializable {
 
@@ -45,13 +49,13 @@ public class CacheKey implements Cloneable, Serializable {
     private static final int DEFAULT_MULTIPLIER = 37;
     private static final int DEFAULT_HASHCODE = 17;
 
-    private final int multiplier;
-    private int hashcode;
-    private long checksum;
-    private int count;
+    private final int multiplier;       // 参与计算hashcode
+    private int hashcode;       // CacheKey的hashcode
+    private long checksum;      // 校验和
+    private int count;          // updateList的个数
     // 8/21/2017 - Sonarlint flags this as needing to be marked transient. While true if content is not serializable, this
     // is not always true and thus should not be marked transient.
-    private List<Object> updateList;
+    private List<Object> updateList;        // 该集合中的所有元素共同确定一个CacheKey是否相同
 
     public CacheKey() {
         this.hashcode = DEFAULT_HASHCODE;
@@ -76,7 +80,7 @@ public class CacheKey implements Cloneable, Serializable {
         checksum += baseHashCode;
         baseHashCode *= count;
 
-        hashcode = multiplier * hashcode + baseHashCode;
+        hashcode = multiplier * hashcode + baseHashCode;        // 重新计算hashcode
 
         updateList.add(object);
     }
@@ -108,6 +112,7 @@ public class CacheKey implements Cloneable, Serializable {
             return false;
         }
 
+        // 将两个CacheKey对象的updateList拿来比较其中的每一项
         for (int i = 0; i < updateList.size(); i++) {
             Object thisObject = updateList.get(i);
             Object thatObject = cacheKey.updateList.get(i);

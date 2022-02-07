@@ -23,11 +23,14 @@ import java.util.Map;
 
 /**
  * @author Clinton Begin
+ *
+ * 需要被装饰。
  */
 public class PerpetualCache implements Cache {
 
     private final String id;
 
+    // 使用HashMap作为缓存
     private final Map<Object, Object> cache = new HashMap<>();
 
     public PerpetualCache(String id) {

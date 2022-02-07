@@ -37,6 +37,7 @@ import java.util.concurrent.locks.ReadWriteLock;
  * </pre>
  *
  * @author Clinton Begin
+ * 定义了所有缓存的基本行为。
  */
 
 public interface Cache {
@@ -44,19 +45,19 @@ public interface Cache {
     /**
      * @return The identifier of this cache
      */
-    String getId();
+    String getId();     // 缓存对象id
 
     /**
      * @param key   Can be any object but usually it is a {@link CacheKey}
      * @param value The result of a select.
      */
-    void putObject(Object key, Object value);
+    void putObject(Object key, Object value);       // 向缓存中添加数据
 
     /**
      * @param key The key
      * @return The object stored in the cache.
      */
-    Object getObject(Object key);
+    Object getObject(Object key);       // 根据指定的key，在缓存中查找对应结果对象
 
     /**
      * As of 3.3.0 this method is only called during a rollback
@@ -71,19 +72,19 @@ public interface Cache {
      * @param key The key
      * @return Not used
      */
-    Object removeObject(Object key);
+    Object removeObject(Object key);        // 删除key对应的缓存项
 
     /**
      * Clears this cache instance.
      */
-    void clear();
+    void clear();           // 清空缓存
 
     /**
      * Optional. This method is not called by the core.
      *
      * @return The number of elements stored in the cache (not its capacity).
      */
-    int getSize();
+    int getSize();      // 缓存项个数
 
     /**
      * Optional. As of 3.2.6 this method is no longer called by the core.

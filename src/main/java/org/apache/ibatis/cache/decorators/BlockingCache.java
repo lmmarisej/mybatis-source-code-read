@@ -32,12 +32,14 @@ import java.util.concurrent.TimeUnit;
  * <p>By its nature, this implementation can cause deadlock when used incorrectly.
  *
  * @author Eduardo Macarron
+ *
+ * 保证只有一个线程到数据库中查找指定key对应的数据。
  */
 public class BlockingCache implements Cache {
 
     private long timeout;
-    private final Cache delegate;
-    private final ConcurrentHashMap<Object, CountDownLatch> locks;
+    private final Cache delegate;       // 被装饰的底层Cache对象
+    private final ConcurrentHashMap<Object, CountDownLatch> locks;      // 每个key都有对应的锁对象
 
     public BlockingCache(Cache delegate) {
         this.delegate = delegate;
@@ -59,7 +61,7 @@ public class BlockingCache implements Cache {
         try {
             delegate.putObject(key, value);
         } finally {
-            releaseLock(key);
+            releaseLock(key);       // 唤醒后续的读线程，可以读了
         }
     }
 
@@ -67,16 +69,16 @@ public class BlockingCache implements Cache {
     public Object getObject(Object key) {
         acquireLock(key);
         Object value = delegate.getObject(key);
-        if (value != null) {
+        if (value != null) {        // 获取到了key对应的缓存项才释放锁，否则继续持有锁，保证线程依次读取同一个key对应的缓存
             releaseLock(key);
         }
-        return value;
+        return value;       // 未找到缓存将不会释放锁，后续获取缓存的线程将被阻塞
     }
 
     @Override
     public Object removeObject(Object key) {
         // despite of its name, this method is called only to release locks
-        releaseLock(key);
+        releaseLock(key);       // 唤醒阻塞的线程，告诉阻塞的线程你们不用等了，等不到的
         return null;
     }
 
@@ -89,18 +91,18 @@ public class BlockingCache implements Cache {
         CountDownLatch newLatch = new CountDownLatch(1);
         while (true) {
             CountDownLatch latch = locks.putIfAbsent(key, newLatch);
-            if (latch == null) {
-                break;
+            if (latch == null) {        // 上锁成功
+                break;      // 退出，继续执行业务
             }
             try {
                 if (timeout > 0) {
-                    boolean acquired = latch.await(timeout, TimeUnit.MILLISECONDS);
+                    boolean acquired = latch.await(timeout, TimeUnit.MILLISECONDS);     // 超时阻塞
                     if (!acquired) {
                         throw new CacheException(
                                 "Couldn't get a lock in " + timeout + " for the key " + key + " at the cache " + delegate.getId());
                     }
                 } else {
-                    latch.await();
+                    latch.await();      // 阻塞，乖乖到上一个线程的后面去排队
                 }
             } catch (InterruptedException e) {
                 throw new CacheException("Got interrupted while trying to acquire lock for key " + key, e);
@@ -113,7 +115,7 @@ public class BlockingCache implements Cache {
         if (latch == null) {
             throw new IllegalStateException("Detected an attempt at releasing unacquired lock. This should never happen.");
         }
-        latch.countDown();
+        latch.countDown();      // 唤醒操作同一个key的后续线程
     }
 
     public long getTimeout() {

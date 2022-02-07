@@ -19,6 +19,8 @@ import org.apache.ibatis.cache.Cache;
 
 /**
  * @author Clinton Begin
+ *
+ * 为缓存增加同步功能。
  */
 public class SynchronizedCache implements Cache {
 

@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Clinton Begin
+ *
+ * 周期性清空所有缓存。
  */
 public class ScheduledCache implements Cache {
 

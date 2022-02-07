@@ -21,6 +21,8 @@ import org.apache.ibatis.logging.LogFactory;
 
 /**
  * @author Clinton Begin
+ *
+ * 提供日志功能，记录缓存的命中次数和访问次数。
  */
 public class LoggingCache implements Cache {
 
