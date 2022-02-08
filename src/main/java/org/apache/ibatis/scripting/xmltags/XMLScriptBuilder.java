@@ -66,7 +66,7 @@ public class XMLScriptBuilder extends BaseBuilder {
     public SqlSource parseScriptNode() {
         MixedSqlNode rootSqlNode = parseDynamicTags(context);
         SqlSource sqlSource;
-        if (isDynamic) {
+        if (isDynamic) {        // 是否是动态SQL
             sqlSource = new DynamicSqlSource(configuration, rootSqlNode);
         } else {
             sqlSource = new RawSqlSource(configuration, rootSqlNode, parameterType);
@@ -78,11 +78,11 @@ public class XMLScriptBuilder extends BaseBuilder {
         List<SqlNode> contents = new ArrayList<>();
         NodeList children = node.getNode().getChildNodes();
         for (int i = 0; i < children.getLength(); i++) {
-            XNode child = node.newXNode(children.item(i));
+            XNode child = node.newXNode(children.item(i));      // 解析能解析的${}
             if (child.getNode().getNodeType() == Node.CDATA_SECTION_NODE || child.getNode().getNodeType() == Node.TEXT_NODE) {
                 String data = child.getStringBody("");
                 TextSqlNode textSqlNode = new TextSqlNode(data);
-                if (textSqlNode.isDynamic()) {
+                if (textSqlNode.isDynamic()) {      // 含有未解析的${}，就是动态SQL语句
                     contents.add(textSqlNode);
                     isDynamic = true;
                 } else {
@@ -94,7 +94,7 @@ public class XMLScriptBuilder extends BaseBuilder {
                 if (handler == null) {
                     throw new BuilderException("Unknown element <" + nodeName + "> in SQL statement.");
                 }
-                handler.handleNode(child, contents);
+                handler.handleNode(child, contents);        // 处理动态SQL，将解析到的sqlNode放入contents集合
                 isDynamic = true;
             }
         }

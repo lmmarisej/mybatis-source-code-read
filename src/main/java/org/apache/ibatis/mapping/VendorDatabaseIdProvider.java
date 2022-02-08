@@ -46,7 +46,7 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
             throw new NullPointerException("dataSource cannot be null");
         }
         try {
-            return getDatabaseName(dataSource);
+            return getDatabaseName(dataSource);     // 解析所连接的数据库产品的名称
         } catch (Exception e) {
             LogHolder.log.error("Could not get a databaseId from dataSource", e);
         }
@@ -61,6 +61,7 @@ public class VendorDatabaseIdProvider implements DatabaseIdProvider {
     private String getDatabaseName(DataSource dataSource) throws SQLException {
         String productName = getDatabaseProductName(dataSource);
         if (this.properties != null) {
+            // 确定最终使用的databaseId
             for (Map.Entry<Object, Object> property : properties.entrySet()) {
                 if (productName.contains((String) property.getKey())) {
                     return (String) property.getValue();

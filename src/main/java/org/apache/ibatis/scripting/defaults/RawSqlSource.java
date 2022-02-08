@@ -31,6 +31,10 @@ import java.util.HashMap;
  *
  * @author Eduardo Macarron
  * @since 3.2.0
+ *
+ * 负责处理静态语句。
+ *
+ * 在Mybatis初始化时完成SQL语句的解析。
  */
 public class RawSqlSource implements SqlSource {
 

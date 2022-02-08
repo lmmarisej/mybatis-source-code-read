@@ -17,11 +17,13 @@ package org.apache.ibatis.scripting.xmltags;
 
 /**
  * @author Clinton Begin
+ *
+ * 对应动态的SQL节点。
  */
 public class IfSqlNode implements SqlNode {
-    private final ExpressionEvaluator evaluator;
-    private final String test;
-    private final SqlNode contents;
+    private final ExpressionEvaluator evaluator;        // 用于解析if节点的test表达式的值
+    private final String test;      // 记录test表达式的值
+    private final SqlNode contents;     // 记录if节点的子节点
 
     public IfSqlNode(SqlNode contents, String test) {
         this.test = test;

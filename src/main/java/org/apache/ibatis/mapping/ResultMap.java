@@ -34,10 +34,10 @@ public class ResultMap {
 
     private String id;
     private Class<?> type;
-    private List<ResultMapping> resultMappings;
-    private List<ResultMapping> idResultMappings;
-    private List<ResultMapping> constructorResultMappings;
-    private List<ResultMapping> propertyResultMappings;
+    private List<ResultMapping> resultMappings;     // 除了discriminator节点之外的映射关系
+    private List<ResultMapping> idResultMappings;       // 映射关系中带有ID标志的映射关系
+    private List<ResultMapping> constructorResultMappings;      // constructor映射关系
+    private List<ResultMapping> propertyResultMappings;     // 不带constructor标志的映射关系
     private Set<String> mappedColumns;
     private Set<String> mappedProperties;
     private Discriminator discriminator;
@@ -48,6 +48,7 @@ public class ResultMap {
     private ResultMap() {
     }
 
+    // 用于创建ResultMap
     public static class Builder {
         private static final Log log = LogFactory.getLog(Builder.class);
 

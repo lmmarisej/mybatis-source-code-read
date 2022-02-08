@@ -27,6 +27,10 @@ import java.util.StringJoiner;
 
 /**
  * @author Clinton Begin
+ *
+ * 记录解析动态SQL语句之后产生的SQL语句片段。
+ *
+ * 在SQL语句真正执行时解析。
  */
 public class DynamicContext {
 

@@ -22,6 +22,8 @@ import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
+ *
+ * 负责处理动态SQL语句。
  */
 public class DynamicSqlSource implements SqlSource {
 
@@ -37,9 +39,11 @@ public class DynamicSqlSource implements SqlSource {
     public BoundSql getBoundSql(Object parameterObject) {
         DynamicContext context = new DynamicContext(configuration, parameterObject);
         rootSqlNode.apply(context);
+        // 解析参数属性，将SQL语句中的#{}占位符替换为？占位符
         SqlSourceBuilder sqlSourceParser = new SqlSourceBuilder(configuration);
         Class<?> parameterType = parameterObject == null ? Object.class : parameterObject.getClass();
         SqlSource sqlSource = sqlSourceParser.parse(context.getSql(), parameterType, context.getBindings());
+        // 创建boundSql，将参数信息复制
         BoundSql boundSql = sqlSource.getBoundSql(parameterObject);
         context.getBindings().forEach(boundSql::setAdditionalParameter);
         return boundSql;

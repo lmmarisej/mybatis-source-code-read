@@ -113,14 +113,15 @@ public class XMLStatementBuilder extends BaseBuilder {
     }
 
     private void processSelectKeyNodes(String id, Class<?> parameterTypeClass, LanguageDriver langDriver) {
-        List<XNode> selectKeyNodes = context.evalNodes("selectKey");
-        if (configuration.getDatabaseId() != null) {
+        List<XNode> selectKeyNodes = context.evalNodes("selectKey");        // 获取全部的selectKey节点
+        if (configuration.getDatabaseId() != null) {        // 解析节点
             parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, configuration.getDatabaseId());
         }
         parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, null);
-        removeSelectKeyNodes(selectKeyNodes);
+        removeSelectKeyNodes(selectKeyNodes);       // 解析后移除节点
     }
 
+    // 为selectKey节点生成id
     private void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
         for (XNode nodeToHandle : list) {
             String id = parentId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
@@ -131,6 +132,7 @@ public class XMLStatementBuilder extends BaseBuilder {
         }
     }
 
+    // 为selectKey节点生成id
     private void parseSelectKeyNode(String id, XNode nodeToHandle, Class<?> parameterTypeClass, LanguageDriver langDriver, String databaseId) {
         String resultType = nodeToHandle.getStringAttribute("resultType");
         Class<?> resultTypeClass = resolveClass(resultType);
@@ -151,7 +153,7 @@ public class XMLStatementBuilder extends BaseBuilder {
         ResultSetType resultSetTypeEnum = null;
 
         SqlSource sqlSource = langDriver.createSqlSource(configuration, nodeToHandle, parameterTypeClass);
-        SqlCommandType sqlCommandType = SqlCommandType.SELECT;
+        SqlCommandType sqlCommandType = SqlCommandType.SELECT;      // selectKey节点中只能配置select语句
 
         builderAssistant.addMappedStatement(id, sqlSource, statementType, sqlCommandType,
                 fetchSize, timeout, parameterMap, parameterTypeClass, resultMap, resultTypeClass,

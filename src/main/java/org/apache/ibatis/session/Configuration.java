@@ -79,7 +79,9 @@ import java.util.function.BiFunction;
 /**
  * @author Clinton Begin
  *
- * 在Mybatis初始化过程中，所有的配置文件都被解析为对象，存储找Configuration对象中。
+ * 在Mybatis初始化过程中，所有的配置文件都被解析为对象，存储在Configuration对象中，全局唯一的。
+ *
+ * 单例模式。
  */
 public class Configuration {
 
@@ -157,7 +159,7 @@ public class Configuration {
      * references a cache bound to another namespace and the value is the
      * namespace which the actual cache is bound to.
      */
-    protected final Map<String, String> cacheRefMap = new HashMap<>();
+    protected final Map<String, String> cacheRefMap = new HashMap<>();  // key为cache-ref节点所在的namespace，value为cache-ref节点指定的namespace
 
     public Configuration(Environment environment) {
         this();

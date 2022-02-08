@@ -31,6 +31,8 @@ import java.util.*;
 
 /**
  * @author Clinton Begin
+ *
+ * 辅助类。
  */
 public class MapperBuilderAssistant extends BaseBuilder {
 
@@ -88,13 +90,13 @@ public class MapperBuilderAssistant extends BaseBuilder {
             throw new BuilderException("cache-ref element requires a namespace attribute.");
         }
         try {
-            unresolvedCacheRef = true;
-            Cache cache = configuration.getCache(namespace);
+            unresolvedCacheRef = true;      // 未成功解析cache的引用
+            Cache cache = configuration.getCache(namespace);        // 获取namespace对应的cache
             if (cache == null) {
                 throw new IncompleteElementException("No cache for namespace '" + namespace + "' could be found.");
             }
-            currentCache = cache;
-            unresolvedCacheRef = false;
+            currentCache = cache;       // 记录当前命名空间使用的cache
+            unresolvedCacheRef = false;     // 解析成功
             return cache;
         } catch (IllegalArgumentException e) {
             throw new IncompleteElementException("No cache for namespace '" + namespace + "' could be found.", e);
@@ -108,6 +110,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
                              boolean readWrite,
                              boolean blocking,
                              Properties props) {
+        // 建造者模式，创建缓存对象
         Cache cache = new CacheBuilder(currentNamespace)
                 .implementation(valueOrDefault(typeClass, PerpetualCache.class))
                 .addDecorator(valueOrDefault(evictionClass, LruCache.class))
@@ -117,8 +120,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
                 .blocking(blocking)
                 .properties(props)
                 .build();
+        // 添加到缓存集合中存储
         configuration.addCache(cache);
-        currentCache = cache;
+        currentCache = cache;       // 记录当前命名空间使用的cache对象
         return cache;
     }
 
@@ -167,9 +171,9 @@ public class MapperBuilderAssistant extends BaseBuilder {
             if (!configuration.hasResultMap(extend)) {
                 throw new IncompleteElementException("Could not find a parent resultmap with id '" + extend + "'");
             }
-            ResultMap resultMap = configuration.getResultMap(extend);
+            ResultMap resultMap = configuration.getResultMap(extend);       // 需要被继承的resultMap对象
             List<ResultMapping> extendedResultMappings = new ArrayList<>(resultMap.getResultMappings());
-            extendedResultMappings.removeAll(resultMappings);
+            extendedResultMappings.removeAll(resultMappings);       // 删除需要覆盖的ResultMapping集合
             // Remove parent constructor if this resultMap declares a constructor.
             boolean declaresConstructor = false;
             for (ResultMapping resultMapping : resultMappings) {
@@ -181,7 +185,7 @@ public class MapperBuilderAssistant extends BaseBuilder {
             if (declaresConstructor) {
                 extendedResultMappings.removeIf(resultMapping -> resultMapping.getFlags().contains(ResultFlag.CONSTRUCTOR));
             }
-            resultMappings.addAll(extendedResultMappings);
+            resultMappings.addAll(extendedResultMappings);      // 需要被继承下来的resultMappings集合
         }
         ResultMap resultMap = new ResultMap.Builder(configuration, id, type, resultMappings, autoMapping)
                 .discriminator(discriminator)

@@ -24,6 +24,8 @@ import java.util.regex.Pattern;
 
 /**
  * @author Clinton Begin
+ *
+ * 包含SQL占位符的动态SQL节点。
  */
 public class TextSqlNode implements SqlNode {
     private final String text;

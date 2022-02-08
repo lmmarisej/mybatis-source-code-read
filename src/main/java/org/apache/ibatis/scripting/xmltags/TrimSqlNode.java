@@ -21,10 +21,12 @@ import java.util.*;
 
 /**
  * @author Clinton Begin
+ *
+ * 根据子节点的解析结果、添加或删除相应的前缀或后缀。
  */
 public class TrimSqlNode implements SqlNode {
 
-    private final SqlNode contents;
+    private final SqlNode contents;     // trim节点的子节点
     private final String prefix;
     private final String suffix;
     private final List<String> prefixesToOverride;
@@ -68,7 +70,7 @@ public class TrimSqlNode implements SqlNode {
         private DynamicContext delegate;
         private boolean prefixApplied;
         private boolean suffixApplied;
-        private StringBuilder sqlBuffer;
+        private StringBuilder sqlBuffer;        // 记录子节点解析后的结果
 
         public FilteredDynamicContext(DynamicContext delegate) {
             super(configuration, null);
@@ -79,6 +81,7 @@ public class TrimSqlNode implements SqlNode {
         }
 
         public void applyAll() {
+            // 获取子节点解析后的结果，并全部转换为大写
             sqlBuffer = new StringBuilder(sqlBuffer.toString().trim());
             String trimmedUppercaseSql = sqlBuffer.toString().toUpperCase(Locale.ENGLISH);
             if (trimmedUppercaseSql.length() > 0) {

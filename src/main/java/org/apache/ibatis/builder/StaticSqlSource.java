@@ -24,6 +24,8 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ *
+ * DynamicSqlSource和RawSqlSource最终将SQL封装为StaticSqlSource返回，其中可能含有？占位符。
  */
 public class StaticSqlSource implements SqlSource {
 

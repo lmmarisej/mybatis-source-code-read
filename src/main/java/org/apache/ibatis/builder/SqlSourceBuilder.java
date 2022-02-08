@@ -31,6 +31,8 @@ import java.util.StringTokenizer;
 
 /**
  * @author Clinton Begin
+ *
+ * 解析SQL语句中的占位符。
  */
 public class SqlSourceBuilder extends BaseBuilder {
 

@@ -30,11 +30,13 @@ import java.util.regex.Pattern;
 
 /**
  * @author Clinton Begin
+ *
+ * 扮演建造者接口。
  */
 public abstract class BaseBuilder {
-    protected final Configuration configuration;
-    protected final TypeAliasRegistry typeAliasRegistry;
-    protected final TypeHandlerRegistry typeHandlerRegistry;
+    protected final Configuration configuration;        // 所有的配置
+    protected final TypeAliasRegistry typeAliasRegistry;    // 别名记录
+    protected final TypeHandlerRegistry typeHandlerRegistry;    // 记录数据库类型与Java类型的转换器
 
     public BaseBuilder(Configuration configuration) {
         this.configuration = configuration;

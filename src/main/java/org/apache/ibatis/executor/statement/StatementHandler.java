@@ -27,6 +27,8 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ *
+ * 用来执行SQL。
  */
 public interface StatementHandler {
 

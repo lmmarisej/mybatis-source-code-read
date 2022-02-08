@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * @author Clinton Begin
  *
- * 需要被装饰。
+ * 真正的缓存对象，Mybatis使用时需要被装饰。
  */
 public class PerpetualCache implements Cache {
 

@@ -19,6 +19,8 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ *
+ * 实现动态SQL中的switch功能。
  */
 public class ChooseSqlNode implements SqlNode {
     private final SqlNode defaultSqlNode;

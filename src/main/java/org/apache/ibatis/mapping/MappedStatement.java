@@ -30,6 +30,8 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ *
+ * 映射配置文件中定义的SQL节点。
  */
 public final class MappedStatement {
 

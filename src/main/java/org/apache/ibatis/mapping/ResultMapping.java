@@ -27,28 +27,32 @@ import java.util.Set;
 
 /**
  * @author Clinton Begin
+ *
+ * 记录结果集中的一列与JavaBean中一个属性之间的映射关系。
  */
 public class ResultMapping {
 
     private Configuration configuration;
-    private String property;
-    private String column;
+    // 也就是通过解析<ResultMap>节点得到的属性
+    private String property;        // Java对象中属性字段
+    private String column;      // 对应节点的column属性，表示与该列进行映射的属性
     private Class<?> javaType;
     private JdbcType jdbcType;
-    private TypeHandler<?> typeHandler;
-    private String nestedResultMapId;
-    private String nestedQueryId;
-    private Set<String> notNullColumns;
-    private String columnPrefix;
-    private List<ResultFlag> flags;
-    private List<ResultMapping> composites;
-    private String resultSet;
-    private String foreignColumn;
-    private boolean lazy;
+    private TypeHandler<?> typeHandler;     // 类型处理器
+    private String nestedResultMapId;       // 引用另一个<ResultMap>节点定义，方便我们join查询
+    private String nestedQueryId;           // 引用另一个<select>节点定义，会把指定的列的值传入，作为select的参数使用
+    private Set<String> notNullColumns;     // 对应节点的notNullColumns属性拆分后的结果
+    private String columnPrefix;            // 对应节点的columnPrefix属性
+    private List<ResultFlag> flags;         // 处理后的标志
+    private List<ResultMapping> composites; // 对应节点的column属性拆分后生成的结果
+    private String resultSet;   // 对应节点的resultSet属性
+    private String foreignColumn;   // 对应节点的foreignColumn属性
+    private boolean lazy;       // 是否延迟加载，对应节点的fetchType属性
 
     ResultMapping() {
     }
 
+    // 主要用于数据整理和数据校验
     public static class Builder {
         private ResultMapping resultMapping = new ResultMapping();
 

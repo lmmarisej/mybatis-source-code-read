@@ -23,12 +23,14 @@ import java.util.Optional;
 
 /**
  * @author Clinton Begin
+ *
+ * 解析动态SQL中集合，处理迭代。
  */
 public class ForEachSqlNode implements SqlNode {
-    public static final String ITEM_PREFIX = "__frch_";
+    public static final String ITEM_PREFIX = "__frch_";     // 解析占位符，为其添加前缀，在迭代中加入后缀序号
 
-    private final ExpressionEvaluator evaluator;
-    private final String collectionExpression;
+    private final ExpressionEvaluator evaluator;        // 判断循环的终止条件
+    private final String collectionExpression;      // 迭代的集合表达式
     private final Boolean nullable;
     private final SqlNode contents;
     private final String open;
@@ -64,7 +66,8 @@ public class ForEachSqlNode implements SqlNode {
 
     @Override
     public boolean apply(DynamicContext context) {
-        Map<String, Object> bindings = context.getBindings();
+        Map<String, Object> bindings = context.getBindings();       // 参数信息
+        // 解析集合表达式对应的参数
         final Iterable<?> iterable = evaluator.evaluateIterable(collectionExpression, bindings,
                 Optional.ofNullable(nullable).orElseGet(configuration::isNullableOnForEach));
         if (iterable == null || !iterable.iterator().hasNext()) {

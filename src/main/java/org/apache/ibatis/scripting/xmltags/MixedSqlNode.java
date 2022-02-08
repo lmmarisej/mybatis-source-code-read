@@ -19,6 +19,8 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ *
+ * 扮演树枝节点，管理多个SqlNode。
  */
 public class MixedSqlNode implements SqlNode {
     private final List<SqlNode> contents;
