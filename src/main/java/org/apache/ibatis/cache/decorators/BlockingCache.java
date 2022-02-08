@@ -69,8 +69,8 @@ public class BlockingCache implements Cache {
     public Object getObject(Object key) {
         acquireLock(key);
         Object value = delegate.getObject(key);
-        if (value != null) {        // 获取到了key对应的缓存项才释放锁，否则继续持有锁，保证线程依次读取同一个key对应的缓存
-            releaseLock(key);
+        if (value != null) {        // 加锁成功，但是没有命中缓存，不能释放锁。因为，没有命中缓存的当前线程回去准备缓存，让后续线程等待当前线程准备完成缓存。
+            releaseLock(key);       // 没有命中缓存让putObject来释放锁
         }
         return value;       // 未找到缓存将不会释放锁，后续获取缓存的线程将被阻塞
     }
@@ -91,7 +91,7 @@ public class BlockingCache implements Cache {
         CountDownLatch newLatch = new CountDownLatch(1);
         while (true) {
             CountDownLatch latch = locks.putIfAbsent(key, newLatch);
-            if (latch == null) {        // 上锁成功
+            if (latch == null) {        // 访问同一个key的当前线程前没有其它线程
                 break;      // 退出，继续执行业务
             }
             try {
@@ -111,7 +111,7 @@ public class BlockingCache implements Cache {
     }
 
     private void releaseLock(Object key) {
-        CountDownLatch latch = locks.remove(key);
+        CountDownLatch latch = locks.remove(key);       // 释放锁
         if (latch == null) {
             throw new IllegalStateException("Detected an attempt at releasing unacquired lock. This should never happen.");
         }
