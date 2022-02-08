@@ -27,6 +27,8 @@ import java.util.*;
 
 /**
  * @author Iwao AVE!
+ *
+ * 记录resultSet的一些元数据，并提供一些列操作resultSet的辅助方法。
  */
 public class ResultSetWrapper {
 

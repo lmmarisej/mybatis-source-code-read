@@ -29,6 +29,8 @@ import java.util.Properties;
  * Builds {@link SqlSession} instances.
  *
  * @author Clinton Begin
+ *
+ * Mybatis的初始化入口，建造者模式。
  */
 public class SqlSessionFactoryBuilder {
 
@@ -46,7 +48,9 @@ public class SqlSessionFactoryBuilder {
 
     public SqlSessionFactory build(Reader reader, String environment, Properties properties) {
         try {
+            // 读取配置文件
             XMLConfigBuilder parser = new XMLConfigBuilder(reader, environment, properties);
+            // 解析配置文件得到Configuration对象，创建SqlSessionFactory
             return build(parser.parse());
         } catch (Exception e) {
             throw ExceptionFactory.wrapException("Error building SqlSession.", e);
