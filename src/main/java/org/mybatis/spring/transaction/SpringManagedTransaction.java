@@ -39,16 +39,18 @@ import static org.springframework.util.Assert.notNull;
  *
  * @author Hunter Presnall
  * @author Eduardo Macarron
+ *
+ * 根据spring配置封装事务配置。
  */
 public class SpringManagedTransaction implements Transaction {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringManagedTransaction.class);
 
-    private final DataSource dataSource;
+    private final DataSource dataSource;        // 当前数据库连接对象关联的数据源对象
 
-    private Connection connection;
+    private Connection connection;              // 当前事物管理中维护的数据库连接对象
 
-    private boolean isConnectionTransactional;
+    private boolean isConnectionTransactional;      // 数据库连接对象是否由spring事物管理器管理
 
     private boolean autoCommit;
 
@@ -76,8 +78,9 @@ public class SpringManagedTransaction implements Transaction {
      * false and will always call commit/rollback so we need to no-op that calls.
      */
     private void openConnection() throws SQLException {
-        this.connection = DataSourceUtils.getConnection(this.dataSource);
+        this.connection = DataSourceUtils.getConnection(this.dataSource);   // 从spring事务管理器中获取数据库连接对象
         this.autoCommit = this.connection.getAutoCommit();
+        // 是否由spring进行管理
         this.isConnectionTransactional = DataSourceUtils.isConnectionTransactional(this.connection, this.dataSource);
 
         LOGGER.debug(() -> "JDBC Connection [" + this.connection + "] will"
@@ -89,7 +92,9 @@ public class SpringManagedTransaction implements Transaction {
      */
     @Override
     public void commit() throws SQLException {
-        if (this.connection != null && !this.isConnectionTransactional && !this.autoCommit) {
+        if (this.connection != null &&
+                !this.isConnectionTransactional     // 当使用spring来管理事务时，不会通过SpringManagedTransaction来管理事务
+                && !this.autoCommit) {
             LOGGER.debug(() -> "Committing JDBC Connection [" + this.connection + "]");
             this.connection.commit();
         }
@@ -111,7 +116,7 @@ public class SpringManagedTransaction implements Transaction {
      */
     @Override
     public void close() throws SQLException {
-        DataSourceUtils.releaseConnection(this.connection, this.dataSource);
+        DataSourceUtils.releaseConnection(this.connection, this.dataSource);        // 数据库连接归还spring事务管理器
     }
 
     /**

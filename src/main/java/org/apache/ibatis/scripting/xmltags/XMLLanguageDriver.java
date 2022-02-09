@@ -30,6 +30,8 @@ import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Eduardo Macarron
+ *
+ * XML版本的动态SQL语言驱动器。
  */
 public class XMLLanguageDriver implements LanguageDriver {
 

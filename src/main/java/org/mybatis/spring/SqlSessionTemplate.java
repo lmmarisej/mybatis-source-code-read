@@ -62,6 +62,10 @@ import static org.springframework.util.Assert.notNull;
  * @author Eduardo Macarron
  * @see SqlSessionFactory
  * @see MyBatisExceptionTranslator
+ *
+ * 完成对指定的数据库操作。
+ *
+ * 线程安全。
  */
 public class SqlSessionTemplate implements SqlSession, DisposableBean {
 
@@ -69,9 +73,9 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
 
     private final ExecutorType executorType;
 
-    private final SqlSession sqlSessionProxy;
+    private final SqlSession sqlSessionProxy;       // 通过JDK动态代理生成的代理对象
 
-    private final PersistenceExceptionTranslator exceptionTranslator;
+    private final PersistenceExceptionTranslator exceptionTranslator;       // 异常转换器，转换为spring体系中的异常
 
     /**
      * Constructs a Spring managed SqlSession with the {@code SqlSessionFactory} provided as an argument.
@@ -113,6 +117,7 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
         this.sqlSessionFactory = sqlSessionFactory;
         this.executorType = executorType;
         this.exceptionTranslator = exceptionTranslator;
+        // 通过JDK代理向SqlSession中插入SqlSessionInterceptor逻辑
         this.sqlSessionProxy = (SqlSession) newProxyInstance(SqlSessionFactory.class.getClassLoader(),
                 new Class[]{SqlSession.class}, new SqlSessionInterceptor());
     }
@@ -400,6 +405,8 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
      * Proxy needed to route MyBatis method calls to the proper SqlSession got from Spring's Transaction Manager It also
      * unwraps exceptions thrown by {@code Method#invoke(Object, Object...)} to pass a {@code PersistenceException} to the
      * {@code PersistenceExceptionTranslator}.
+     *
+     * 通过SqlSessionTemplate中的SqlSession进行增删改查时，都会被本Interceptor拦截。
      */
     private class SqlSessionInterceptor implements InvocationHandler {
         @Override
@@ -407,19 +414,22 @@ public class SqlSessionTemplate implements SqlSession, DisposableBean {
             SqlSession sqlSession = getSqlSession(SqlSessionTemplate.this.sqlSessionFactory,
                     SqlSessionTemplate.this.executorType, SqlSessionTemplate.this.exceptionTranslator);
             try {
-                Object result = method.invoke(sqlSession, args);
+                Object result = method.invoke(sqlSession, args);        // 给mapper一个sqlSession，让其执行SQL
+                // 事务是否由spring进行管理，而判断是否提交
                 if (!isSqlSessionTransactional(sqlSession, SqlSessionTemplate.this.sqlSessionFactory)) {
                     // force commit even on non-dirty sessions because some databases require
                     // a commit/rollback before calling close()
                     sqlSession.commit(true);
                 }
-                return result;
+                return result;      // 返回操作结果
             } catch (Throwable t) {
                 Throwable unwrapped = unwrapThrowable(t);
+                // spring要处理该异常
                 if (SqlSessionTemplate.this.exceptionTranslator != null && unwrapped instanceof PersistenceException) {
                     // release the connection to avoid a deadlock if the translator is no loaded. See issue #22
                     closeSqlSession(sqlSession, SqlSessionTemplate.this.sqlSessionFactory);
                     sqlSession = null;
+                    // 异常转换后抛给spring处理
                     Throwable translated = SqlSessionTemplate.this.exceptionTranslator
                             .translateExceptionIfPossible((PersistenceException) unwrapped);
                     if (translated != null) {

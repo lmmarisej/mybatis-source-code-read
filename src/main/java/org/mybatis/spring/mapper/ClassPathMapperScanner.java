@@ -165,7 +165,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
 
         // if specified, use the given annotation and / or marker interface
         if (this.annotationClass != null) {
-            addIncludeFilter(new AnnotationTypeFilter(this.annotationClass));
+            addIncludeFilter(new AnnotationTypeFilter(this.annotationClass));       // 只扫描指定注解标注过的类
             acceptAllInterfaces = false;
         }
 
@@ -185,7 +185,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
             addIncludeFilter((metadataReader, metadataReaderFactory) -> true);
         }
 
-        // exclude package-info.java
+        // exclude package-info.java        排除jdk9的模块信息类
         addExcludeFilter((metadataReader, metadataReaderFactory) -> {
             String className = metadataReader.getClassMetadata().getClassName();
             return className.endsWith("package-info");
@@ -198,18 +198,19 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
      */
     @Override
     public Set<BeanDefinitionHolder> doScan(String... basePackages) {
-        Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
+        Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);     // 扫描得到符合条件的类
 
         if (beanDefinitions.isEmpty()) {
             LOGGER.warn(() -> "No MyBatis mapper was found in '" + Arrays.toString(basePackages)
                     + "' package. Please check your configuration.");
         } else {
-            processBeanDefinitions(beanDefinitions);
+            processBeanDefinitions(beanDefinitions);        // 再次处理
         }
 
         return beanDefinitions;
     }
 
+    // 对扫描到的BeanDefinition进行修改
     private void processBeanDefinitions(Set<BeanDefinitionHolder> beanDefinitions) {
         AbstractBeanDefinition definition;
         BeanDefinitionRegistry registry = getRegistry();
@@ -227,8 +228,8 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
             LOGGER.debug(() -> "Creating MapperFactoryBean with name '" + holder.getBeanName() + "' and '" + beanClassName
                     + "' mapperInterface");
 
-            // the mapper interface is the original class of the bean
-            // but, the actual class of the bean is MapperFactoryBean
+            // the mapper interface is the original class of the bean but, the actual class of the bean is MapperFactoryBean
+            // 将扫描到的接口类型作为构造方法的参数，使用MapperFactoryBean包裹mapper
             definition.getConstructorArgumentValues().addGenericArgumentValue(beanClassName); // issue #59
             try {
                 // for spring-native
@@ -237,6 +238,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
                 // ignore
             }
 
+            // 将BeanDefinition中记录的beanClass改为MapperFactoryBean类型
             definition.setBeanClass(this.mapperFactoryBeanClass);
 
             definition.getPropertyValues().add("addToConfig", this.addToConfig);
@@ -292,6 +294,7 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
                 if (registry.containsBeanDefinition(proxyHolder.getBeanName())) {
                     registry.removeBeanDefinition(proxyHolder.getBeanName());
                 }
+                // 向Spring容器注册BeanDefinition
                 registry.registerBeanDefinition(proxyHolder.getBeanName(), proxyHolder.getBeanDefinition());
             }
 

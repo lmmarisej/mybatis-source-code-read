@@ -88,6 +88,7 @@ public final class SqlSessionUtils {
         notNull(sessionFactory, NO_SQL_SESSION_FACTORY_SPECIFIED);
         notNull(executorType, NO_EXECUTOR_TYPE_SPECIFIED);
 
+        // 尝试从spring事务管理器中获取连接
         SqlSessionHolder holder = (SqlSessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
 
         SqlSession session = sessionHolder(executorType, holder);
@@ -96,8 +97,9 @@ public final class SqlSessionUtils {
         }
 
         LOGGER.debug(() -> "Creating a new SqlSession");
-        session = sessionFactory.openSession(executorType);
+        session = sessionFactory.openSession(executorType);     // 新建SqlSession
 
+        // 交给spring事务管理器管理
         registerSessionHolder(sessionFactory, executorType, exceptionTranslator, session);
 
         return session;
@@ -139,7 +141,9 @@ public final class SqlSessionUtils {
                             "SqlSessionFactory must be using a SpringManagedTransactionFactory in order to use Spring transaction synchronization");
                 }
             }
-        } else {
+        }
+        // spring不负责管理
+        else {
             LOGGER.debug(() -> "SqlSession [" + session
                     + "] was not registered for synchronization because synchronization is not active");
         }
@@ -178,7 +182,9 @@ public final class SqlSessionUtils {
         if ((holder != null) && (holder.getSqlSession() == session)) {
             LOGGER.debug(() -> "Releasing transactional SqlSession [" + session + "]");
             holder.released();
-        } else {
+        }
+        // 非spring管理的SqlSession
+        else {
             LOGGER.debug(() -> "Closing non transactional SqlSession [" + session + "]");
             session.close();
         }

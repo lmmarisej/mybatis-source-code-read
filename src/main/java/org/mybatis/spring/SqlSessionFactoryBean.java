@@ -83,6 +83,8 @@ import static org.springframework.util.StringUtils.tokenizeToStringArray;
  * @author Kazuki Shimizu
  * @see #setConfigLocation
  * @see #setDataSource
+ *
+ * 与spring集成，SqlSessionFactoryBean提供spring bean支持，负责创建SqlSessionFactory对象。
  */
 public class SqlSessionFactoryBean
         implements FactoryBean<SqlSessionFactory>, InitializingBean, ApplicationListener<ApplicationEvent> {
@@ -462,32 +464,39 @@ public class SqlSessionFactoryBean
      *
      * @return SqlSessionFactory
      * @throws Exception if configuration is failed
+     *
+     * Mybatis在spring容器中的入口。
      */
     protected SqlSessionFactory buildSqlSessionFactory() throws Exception {
 
         final Configuration targetConfiguration;
 
         XMLConfigBuilder xmlConfigBuilder = null;
-        if (this.configuration != null) {
+        if (this.configuration != null) {       // configuration可以通过用户指定
             targetConfiguration = this.configuration;
             if (targetConfiguration.getVariables() == null) {
                 targetConfiguration.setVariables(this.configurationProperties);
             } else if (this.configurationProperties != null) {
                 targetConfiguration.getVariables().putAll(this.configurationProperties);
             }
-        } else if (this.configLocation != null) {
+        } else if (this.configLocation != null) {       // 指定了配置文件路径
+            // 读取配置文件
             xmlConfigBuilder = new XMLConfigBuilder(this.configLocation.getInputStream(), null, this.configurationProperties);
             targetConfiguration = xmlConfigBuilder.getConfiguration();
         } else {
             LOGGER.debug(
                     () -> "Property 'configuration' or 'configLocation' not specified, using default MyBatis Configuration");
+            // 直接创建Configuration对象并进行配置
             targetConfiguration = new Configuration();
             Optional.ofNullable(this.configurationProperties).ifPresent(targetConfiguration::setVariables);
         }
 
+        // 配置objectFactory
         Optional.ofNullable(this.objectFactory).ifPresent(targetConfiguration::setObjectFactory);
         Optional.ofNullable(this.objectWrapperFactory).ifPresent(targetConfiguration::setObjectWrapperFactory);
         Optional.ofNullable(this.vfs).ifPresent(targetConfiguration::setVfsImpl);
+
+        // 扫描包，获取配置，配置
 
         if (hasLength(this.typeAliasesPackage)) {
             scanClasses(this.typeAliasesPackage, this.typeAliasesSuperType).stream()
@@ -545,7 +554,7 @@ public class SqlSessionFactoryBean
 
         if (xmlConfigBuilder != null) {
             try {
-                xmlConfigBuilder.parse();
+                xmlConfigBuilder.parse();       // 解析配置文件
                 LOGGER.debug(() -> "Parsed configuration file: '" + this.configLocation + "'");
             } catch (Exception ex) {
                 throw new NestedIOException("Failed to parse config resource: " + this.configLocation, ex);
@@ -554,10 +563,12 @@ public class SqlSessionFactoryBean
             }
         }
 
+        // transactionFactory缺省为SpringManagedTransactionFactory
         targetConfiguration.setEnvironment(new Environment(this.environment,
                 this.transactionFactory == null ? new SpringManagedTransactionFactory() : this.transactionFactory,
                 this.dataSource));
 
+        // 设置Environment
         if (this.mapperLocations != null) {
             if (this.mapperLocations.length == 0) {
                 LOGGER.warn(() -> "Property 'mapperLocations' was specified but matching resources are not found.");
@@ -582,6 +593,7 @@ public class SqlSessionFactoryBean
             LOGGER.debug(() -> "Property 'mapperLocations' was not specified.");
         }
 
+        // 构建sqlSessionFactory
         return this.sqlSessionFactoryBuilder.build(targetConfiguration);
     }
 

@@ -34,6 +34,8 @@ import static org.springframework.util.Assert.notNull;
  * @see #setSqlSessionFactory
  * @see #setSqlSessionTemplate
  * @see SqlSessionTemplate
+ *
+ * 辅助开发人员编写dao实现，可以更方便的获取SqlSession。
  */
 public abstract class SqlSessionDaoSupport extends DaoSupport {
 
@@ -44,6 +46,8 @@ public abstract class SqlSessionDaoSupport extends DaoSupport {
      * SqlSessionFactory.
      *
      * @param sqlSessionFactory a factory of SqlSession
+     *
+     *                          需要SqlSessionFactory才能完成构造
      */
     public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
         if (this.sqlSessionTemplate == null || sqlSessionFactory != this.sqlSessionTemplate.getSqlSessionFactory()) {

@@ -49,10 +49,12 @@ import static org.springframework.util.Assert.notNull;
  *
  * @author Eduardo Macarron
  * @see SqlSessionTemplate
+ *
+ * 直接将mapper接口注入到service层的bean中，自动创建dao层的实现。
  */
 public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements FactoryBean<T> {
 
-    private Class<T> mapperInterface;
+    private Class<T> mapperInterface;       // mapper接口
 
     private boolean addToConfig = true;
 
@@ -60,12 +62,15 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
         // intentionally empty
     }
 
+    // 构造bean时，除了需要指定mapper接口，由于继承了SqlSessionDaoSupport，因此还需要指定SqlSessionTemplate
     public MapperFactoryBean(Class<T> mapperInterface) {
         this.mapperInterface = mapperInterface;
     }
 
     /**
      * {@inheritDoc}
+     *
+     * 完成mapper接口的加载
      */
     @Override
     protected void checkDaoConfig() {
@@ -73,10 +78,11 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
 
         notNull(this.mapperInterface, "Property 'mapperInterface' is required");
 
+        // 配置对象
         Configuration configuration = getSqlSession().getConfiguration();
-        if (this.addToConfig && !configuration.hasMapper(this.mapperInterface)) {
+        if (this.addToConfig && !configuration.hasMapper(this.mapperInterface)) {   // mapper接口尚未注册
             try {
-                configuration.addMapper(this.mapperInterface);
+                configuration.addMapper(this.mapperInterface);      // mapper接口注册，一并解析映射配置文件
             } catch (Exception e) {
                 logger.error("Error while adding the mapper '" + this.mapperInterface + "' to configuration.", e);
                 throw new IllegalArgumentException(e);
@@ -88,10 +94,14 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport implements Factor
 
     /**
      * {@inheritDoc}
+     *
+     * 用户getBean时触发。
+     *
+     * 用于创建bean对象的工厂方法，Mybatis核心功能与IoC容器的关联点。
      */
     @Override
     public T getObject() throws Exception {
-        return getSqlSession().getMapper(this.mapperInterface);
+        return getSqlSession().getMapper(this.mapperInterface);     // 交给Mybatis通过JDK动态代理，参见：MapperProxy
     }
 
     /**

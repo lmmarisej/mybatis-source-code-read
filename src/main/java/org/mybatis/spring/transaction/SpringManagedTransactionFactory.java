@@ -27,6 +27,8 @@ import java.util.Properties;
  * Creates a {@code SpringManagedTransaction}.
  *
  * @author Hunter Presnall
+ *
+ * spring配置文件中如若未明确指定TransactionFactory，将使用SpringManagedTransactionFactory作为缺省值。
  */
 public class SpringManagedTransactionFactory implements TransactionFactory {
 

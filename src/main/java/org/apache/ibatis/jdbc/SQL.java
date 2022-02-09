@@ -17,6 +17,8 @@ package org.apache.ibatis.jdbc;
 
 /**
  * @author Clinton Begin
+ *
+ * Mybatis提供的动态SQL生成方案。
  */
 public class SQL extends AbstractSQL<SQL> {
 

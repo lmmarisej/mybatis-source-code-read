@@ -86,11 +86,13 @@ import static org.springframework.util.Assert.notNull;
  * @author Eduardo Macarron
  * @see MapperFactoryBean
  * @see ClassPathMapperScanner
+ *
+ * 直接扫描指定包完成Mybatis的配置，避免在spring的配置文件中写大量配置。
  */
 public class MapperScannerConfigurer
         implements BeanDefinitionRegistryPostProcessor, InitializingBean, ApplicationContextAware, BeanNameAware {
 
-    private String basePackage;
+    private String basePackage;     // 扫描的包，支持多个，用逗号分隔
 
     private boolean addToConfig = true;
 
@@ -104,9 +106,11 @@ public class MapperScannerConfigurer
 
     private String sqlSessionTemplateBeanName;
 
-    private Class<? extends Annotation> annotationClass;
+    // annotationClass 与 markerInterface 都不为null，将取并集
 
-    private Class<?> markerInterface;
+    private Class<? extends Annotation> annotationClass;        // 若该字段不为null，MapperScannerConfigurer只注册使用了注解标记的接口
+
+    private Class<?> markerInterface;           // 不为null，MapperScannerConfigurer将只注册继承了markerInterface的接口
 
     private Class<? extends MapperFactoryBean> mapperFactoryBeanClass;
 
@@ -116,7 +120,7 @@ public class MapperScannerConfigurer
 
     private boolean processPropertyPlaceHolders;
 
-    private BeanNameGenerator nameGenerator;
+    private BeanNameGenerator nameGenerator;        // 名称生成器，生成注册到IoC容器时的beanName
 
     private String defaultScope;
 
@@ -332,11 +336,11 @@ public class MapperScannerConfigurer
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) {
         if (this.processPropertyPlaceHolders) {
-            processPropertyPlaceHolders();
+            processPropertyPlaceHolders();      // 处理applicationContext.xml文件中MapperScannerConfigurer配置的占位符
         }
 
-        ClassPathMapperScanner scanner = new ClassPathMapperScanner(registry);
-        scanner.setAddToConfig(this.addToConfig);
+        ClassPathMapperScanner scanner = new ClassPathMapperScanner(registry);      // 实例化MapperScannerConfigurer
+        scanner.setAddToConfig(this.addToConfig);       // 对MapperScannerConfigurer对象进行配置
         scanner.setAnnotationClass(this.annotationClass);
         scanner.setMarkerInterface(this.markerInterface);
         scanner.setSqlSessionFactory(this.sqlSessionFactory);
@@ -352,7 +356,7 @@ public class MapperScannerConfigurer
         if (StringUtils.hasText(defaultScope)) {
             scanner.setDefaultScope(defaultScope);
         }
-        scanner.registerFilters();
+        scanner.registerFilters();      // 注册扫描过程中使用的过滤器，spring类型的过滤器，参见：TypeFilter
         scanner.scan(
                 StringUtils.tokenizeToStringArray(this.basePackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS));
     }
