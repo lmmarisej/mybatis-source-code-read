@@ -24,16 +24,16 @@ import org.apache.ibatis.logging.LogFactory;
  */
 public class LoggerFactory {
 
-  private LoggerFactory() {
-    // NOP
-  }
+    private LoggerFactory() {
+        // NOP
+    }
 
-  public static Logger getLogger(Class<?> aClass) {
-    return new Logger(LogFactory.getLog(aClass));
-  }
+    public static Logger getLogger(Class<?> aClass) {
+        return new Logger(LogFactory.getLog(aClass));
+    }
 
-  public static Logger getLogger(String logger) {
-    return new Logger(LogFactory.getLog(logger));
-  }
+    public static Logger getLogger(String logger) {
+        return new Logger(LogFactory.getLog(logger));
+    }
 
 }

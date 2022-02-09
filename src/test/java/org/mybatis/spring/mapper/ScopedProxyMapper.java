@@ -22,7 +22,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 @Mapper
 @Scope(scopeName = "thread", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public interface ScopedProxyMapper {
-  default String test() {
-    return "test";
-  }
+    default String test() {
+        return "test";
+    }
 }

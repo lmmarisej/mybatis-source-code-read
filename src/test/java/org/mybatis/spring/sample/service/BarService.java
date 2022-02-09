@@ -25,14 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class BarService {
 
-  private final UserDao userDao;
+    private final UserDao userDao;
 
-  public BarService(UserDao userDao) {
-    this.userDao = userDao;
-  }
+    public BarService(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
-  public User doSomeBusinessStuff(String userId) {
-    return this.userDao.getUser(userId);
-  }
+    public User doSomeBusinessStuff(String userId) {
+        return this.userDao.getUser(userId);
+    }
 
 }

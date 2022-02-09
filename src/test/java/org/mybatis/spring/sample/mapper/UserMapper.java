@@ -23,6 +23,6 @@ import org.mybatis.spring.sample.domain.User;
  */
 public interface UserMapper {
 
-  User getUser(String userId);
+    User getUser(String userId);
 
 }

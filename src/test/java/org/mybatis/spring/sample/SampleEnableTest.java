@@ -28,9 +28,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig
 class SampleEnableTest extends AbstractSampleTest {
 
-  @Configuration
-  @ImportResource("classpath:org/mybatis/spring/sample/config/applicationContext-infrastructure.xml")
-  @MapperScan("org.mybatis.spring.sample.mapper")
-  static class AppConfig {
-  }
+    @Configuration
+    @ImportResource("classpath:org/mybatis/spring/sample/config/applicationContext-infrastructure.xml")
+    @MapperScan("org.mybatis.spring.sample.mapper")
+    static class AppConfig {
+    }
 }

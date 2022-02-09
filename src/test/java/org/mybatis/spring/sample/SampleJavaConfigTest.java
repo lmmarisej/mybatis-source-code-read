@@ -30,22 +30,22 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 @SpringJUnitConfig(classes = SampleConfig.class)
 class SampleJavaConfigTest {
 
-  @Autowired
-  private FooService fooService;
+    @Autowired
+    private FooService fooService;
 
-  @Autowired
-  private FooService fooServiceWithMapperFactoryBean;
+    @Autowired
+    private FooService fooServiceWithMapperFactoryBean;
 
-  @Test
-  void test() {
-    User user = fooService.doSomeBusinessStuff("u1");
-    assertThat(user.getName()).isEqualTo("Pocoyo");
-  }
+    @Test
+    void test() {
+        User user = fooService.doSomeBusinessStuff("u1");
+        assertThat(user.getName()).isEqualTo("Pocoyo");
+    }
 
-  @Test
-  void testWithMapperFactoryBean() {
-    User user = fooServiceWithMapperFactoryBean.doSomeBusinessStuff("u1");
-    assertThat(user.getName()).isEqualTo("Pocoyo");
-  }
+    @Test
+    void testWithMapperFactoryBean() {
+        User user = fooServiceWithMapperFactoryBean.doSomeBusinessStuff("u1");
+        assertThat(user.getName()).isEqualTo("Pocoyo");
+    }
 
 }

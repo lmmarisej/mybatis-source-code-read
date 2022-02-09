@@ -39,67 +39,67 @@ import org.springframework.batch.item.ItemStreamException;
  */
 class MyBatisCursorItemReaderTest {
 
-  @Mock
-  private SqlSessionFactory sqlSessionFactory;
+    @Mock
+    private SqlSessionFactory sqlSessionFactory;
 
-  @Mock
-  private SqlSession sqlSession;
+    @Mock
+    private SqlSession sqlSession;
 
-  @Mock
-  private Cursor<Object> cursor;
+    @Mock
+    private Cursor<Object> cursor;
 
-  @BeforeEach
-  void setUp() {
-    MockitoAnnotations.initMocks(this);
-  }
-
-  @Test
-  void testCloseOnFailing() throws Exception {
-
-    Mockito.when(this.sqlSessionFactory.openSession(ExecutorType.SIMPLE)).thenReturn(this.sqlSession);
-    Mockito.when(this.cursor.iterator()).thenReturn(getFoos().iterator());
-    Mockito.when(this.sqlSession.selectCursor("selectFoo", Collections.singletonMap("id", 1)))
-        .thenThrow(new RuntimeException("error."));
-
-    MyBatisCursorItemReader<Foo> itemReader = new MyBatisCursorItemReader<>();
-    itemReader.setSqlSessionFactory(this.sqlSessionFactory);
-    itemReader.setQueryId("selectFoo");
-    itemReader.setParameterValues(Collections.singletonMap("id", 1));
-    itemReader.afterPropertiesSet();
-
-    ExecutionContext executionContext = new ExecutionContext();
-    try {
-      itemReader.open(executionContext);
-      fail();
-    } catch (ItemStreamException e) {
-      Assertions.assertThat(e).hasMessage("Failed to initialize the reader").hasCause(new RuntimeException("error."));
-    } finally {
-      itemReader.close();
-      Mockito.verify(this.sqlSession).close();
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
     }
 
-  }
+    @Test
+    void testCloseOnFailing() throws Exception {
 
-  @Test
-  void testCloseBeforeOpen() {
-    MyBatisCursorItemReader<Foo> itemReader = new MyBatisCursorItemReader<>();
-    itemReader.close();
-  }
+        Mockito.when(this.sqlSessionFactory.openSession(ExecutorType.SIMPLE)).thenReturn(this.sqlSession);
+        Mockito.when(this.cursor.iterator()).thenReturn(getFoos().iterator());
+        Mockito.when(this.sqlSession.selectCursor("selectFoo", Collections.singletonMap("id", 1)))
+                .thenThrow(new RuntimeException("error."));
 
-  private List<Object> getFoos() {
-    return Arrays.asList(new Foo("foo1"), new Foo("foo2"), new Foo("foo3"));
-  }
+        MyBatisCursorItemReader<Foo> itemReader = new MyBatisCursorItemReader<>();
+        itemReader.setSqlSessionFactory(this.sqlSessionFactory);
+        itemReader.setQueryId("selectFoo");
+        itemReader.setParameterValues(Collections.singletonMap("id", 1));
+        itemReader.afterPropertiesSet();
 
-  private static class Foo {
-    private final String name;
+        ExecutionContext executionContext = new ExecutionContext();
+        try {
+            itemReader.open(executionContext);
+            fail();
+        } catch (ItemStreamException e) {
+            Assertions.assertThat(e).hasMessage("Failed to initialize the reader").hasCause(new RuntimeException("error."));
+        } finally {
+            itemReader.close();
+            Mockito.verify(this.sqlSession).close();
+        }
 
-    Foo(String name) {
-      this.name = name;
     }
 
-    public String getName() {
-      return this.name;
+    @Test
+    void testCloseBeforeOpen() {
+        MyBatisCursorItemReader<Foo> itemReader = new MyBatisCursorItemReader<>();
+        itemReader.close();
     }
-  }
+
+    private List<Object> getFoos() {
+        return Arrays.asList(new Foo("foo1"), new Foo("foo2"), new Foo("foo3"));
+    }
+
+    private static class Foo {
+        private final String name;
+
+        Foo(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+    }
 
 }

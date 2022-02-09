@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Scope;
 
 @Scope
 public interface Ds2Mapper {
-  default String test() {
-    return "ds2";
-  }
+    default String test() {
+        return "ds2";
+    }
 }

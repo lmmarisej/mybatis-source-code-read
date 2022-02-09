@@ -26,29 +26,29 @@ import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;
 import org.apache.ibatis.type.TypeHandler;
 
-@MappedTypes({ AtomicInteger.class, AtomicLong.class })
+@MappedTypes({AtomicInteger.class, AtomicLong.class})
 public class AtomicNumberTypeHandler implements TypeHandler<Number> {
 
-  public AtomicNumberTypeHandler(Class<?> type) {
-  }
+    public AtomicNumberTypeHandler(Class<?> type) {
+    }
 
-  @Override
-  public void setParameter(PreparedStatement ps, int i, Number parameter, JdbcType jdbcType) throws SQLException {
-  }
+    @Override
+    public void setParameter(PreparedStatement ps, int i, Number parameter, JdbcType jdbcType) throws SQLException {
+    }
 
-  @Override
-  public Number getResult(ResultSet rs, String columnName) throws SQLException {
-    return null;
-  }
+    @Override
+    public Number getResult(ResultSet rs, String columnName) throws SQLException {
+        return null;
+    }
 
-  @Override
-  public Number getResult(CallableStatement cs, int columnIndex) throws SQLException {
-    return null;
-  }
+    @Override
+    public Number getResult(CallableStatement cs, int columnIndex) throws SQLException {
+        return null;
+    }
 
-  @Override
-  public Number getResult(ResultSet rs, int columnIndex) throws SQLException {
-    return null;
-  }
+    @Override
+    public Number getResult(ResultSet rs, int columnIndex) throws SQLException {
+        return null;
+    }
 
 }

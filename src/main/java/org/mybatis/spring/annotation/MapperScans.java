@@ -28,13 +28,13 @@ import java.lang.annotation.*;
  * same method, implicitly generating this container annotation.
  *
  * @author Kazuki Shimizu
- * @since 2.0.0
  * @see MapperScan
+ * @since 2.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
 @Import(MapperScannerRegistrar.RepeatingRegistrar.class)
 public @interface MapperScans {
-  MapperScan[] value();
+    MapperScan[] value();
 }

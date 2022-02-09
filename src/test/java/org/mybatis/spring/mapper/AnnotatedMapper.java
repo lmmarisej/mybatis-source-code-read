@@ -21,10 +21,10 @@ import org.springframework.stereotype.Component;
 // ensures annotated classes are loaded
 @Component
 public interface AnnotatedMapper {
-  void method();
+    void method();
 
-  default String test() {
-    return Thread.currentThread().getName();
-  }
+    default String test() {
+        return Thread.currentThread().getName();
+    }
 
 }

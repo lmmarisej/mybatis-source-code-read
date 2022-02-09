@@ -26,14 +26,14 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext
 abstract class AbstractSampleTest {
 
-  @Autowired
-  protected FooService fooService;
+    @Autowired
+    protected FooService fooService;
 
-  @Test
-  final void testFooService() {
-    User user = this.fooService.doSomeBusinessStuff("u1");
-    assertThat(user).isNotNull();
-    assertThat(user.getName()).isEqualTo("Pocoyo");
-  }
+    @Test
+    final void testFooService() {
+        User user = this.fooService.doSomeBusinessStuff("u1");
+        assertThat(user).isNotNull();
+        assertThat(user.getName()).isEqualTo("Pocoyo");
+    }
 
 }

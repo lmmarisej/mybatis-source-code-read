@@ -25,14 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class FooService {
 
-  private final UserMapper userMapper;
+    private final UserMapper userMapper;
 
-  public FooService(UserMapper userMapper) {
-    this.userMapper = userMapper;
-  }
+    public FooService(UserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
-  public User doSomeBusinessStuff(String userId) {
-    return this.userMapper.getUser(userId);
-  }
+    public User doSomeBusinessStuff(String userId) {
+        return this.userMapper.getUser(userId);
+    }
 
 }

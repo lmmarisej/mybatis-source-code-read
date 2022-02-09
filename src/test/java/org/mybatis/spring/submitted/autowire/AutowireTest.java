@@ -22,19 +22,19 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 class AutowireTest {
 
-  @Test
-  void shouldReturnMapper() {
-    try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
-        "classpath:org/mybatis/spring/submitted/autowire/spring.xml")) {
+    @Test
+    void shouldReturnMapper() {
+        try (ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(
+                "classpath:org/mybatis/spring/submitted/autowire/spring.xml")) {
 
-      FooMapper fooMapper = (FooMapper) context.getBean("fooMapper");
-      assertThat(fooMapper).isNotNull();
-      fooMapper.executeFoo();
+            FooMapper fooMapper = (FooMapper) context.getBean("fooMapper");
+            assertThat(fooMapper).isNotNull();
+            fooMapper.executeFoo();
 
-      BarMapper barMapper = (BarMapper) context.getBean("barMapper");
-      assertThat(barMapper).isNotNull();
-      barMapper.executeBar();
+            BarMapper barMapper = (BarMapper) context.getBean("barMapper");
+            assertThat(barMapper).isNotNull();
+            barMapper.executeBar();
+        }
+
     }
-
-  }
 }

@@ -17,8 +17,8 @@ package org.mybatis.spring;
 
 public interface TestMapper {
 
-  int findTest();
+    int findTest();
 
-  void insertTest(String test);
+    void insertTest(String test);
 
 }

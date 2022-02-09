@@ -23,26 +23,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class SimpleFactoryBean implements FactoryBean<Object> {
 
-  private static boolean isInitializedEarly = false;
+    private static boolean isInitializedEarly = false;
 
-  public SimpleFactoryBean() {
-    isInitializedEarly = true;
-    throw new RuntimeException();
-  }
-
-  @Autowired
-  public SimpleFactoryBean(ApplicationContext context) {
-    if (isInitializedEarly) {
-      throw new RuntimeException();
+    public SimpleFactoryBean() {
+        isInitializedEarly = true;
+        throw new RuntimeException();
     }
-  }
 
-  public Object getObject() {
-    return new Object();
-  }
+    @Autowired
+    public SimpleFactoryBean(ApplicationContext context) {
+        if (isInitializedEarly) {
+            throw new RuntimeException();
+        }
+    }
 
-  public Class<?> getObjectType() {
-    return Object.class;
-  }
+    public Object getObject() {
+        return new Object();
+    }
+
+    public Class<?> getObjectType() {
+        return Object.class;
+    }
 
 }

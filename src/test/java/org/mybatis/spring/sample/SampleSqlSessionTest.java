@@ -29,17 +29,17 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
  * SqlSessionDaoSupport.
  */
 @DirtiesContext
-@SpringJUnitConfig(locations = { "classpath:org/mybatis/spring/sample/config/applicationContext-sqlsession.xml" })
+@SpringJUnitConfig(locations = {"classpath:org/mybatis/spring/sample/config/applicationContext-sqlsession.xml"})
 class SampleSqlSessionTest {
 
-  @Autowired
-  private BarService barService;
+    @Autowired
+    private BarService barService;
 
-  @Test
-  final void testFooService() {
-    User user = this.barService.doSomeBusinessStuff("u1");
-    assertThat(user).isNotNull();
-    assertThat(user.getName()).isEqualTo("Pocoyo");
-  }
+    @Test
+    final void testFooService() {
+        User user = this.barService.doSomeBusinessStuff("u1");
+        assertThat(user).isNotNull();
+        assertThat(user.getName()).isEqualTo("Pocoyo");
+    }
 
 }

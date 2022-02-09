@@ -41,150 +41,150 @@ import org.springframework.batch.item.ExecutionContext;
 /**
  * Tests for {@link MyBatisPagingItemReaderBuilder}.
  *
- * @since 2.0.0
  * @author Kazuki Shimizu
+ * @since 2.0.0
  */
 class MyBatisPagingItemReaderBuilderTest {
 
-  @Mock
-  private DataSource dataSource;
+    @Mock
+    private DataSource dataSource;
 
-  @Mock
-  private SqlSessionFactory sqlSessionFactory;
+    @Mock
+    private SqlSessionFactory sqlSessionFactory;
 
-  @Mock
-  private SqlSession sqlSession;
+    @Mock
+    private SqlSession sqlSession;
 
-  @BeforeEach
-  void setUp() {
-    MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
 
-    Configuration configuration = new Configuration();
-    Environment environment = new Environment("unittest", new JdbcTransactionFactory(), dataSource);
-    configuration.setEnvironment(environment);
-    Mockito.when(this.sqlSessionFactory.getConfiguration()).thenReturn(configuration);
-    Mockito.when(this.sqlSessionFactory.openSession(ExecutorType.BATCH)).thenReturn(this.sqlSession);
-    Map<String, Object> parameters = new HashMap<>();
-    parameters.put("id", 1);
-    parameters.put("_page", 0);
-    parameters.put("_pagesize", 10);
-    parameters.put("_skiprows", 0);
-    Mockito.when(this.sqlSession.selectList("selectFoo", parameters)).thenReturn(getFoos());
-  }
-
-  @Test
-  void testConfiguration() throws Exception {
-    // @formatter:off
-    MyBatisPagingItemReader<Foo> itemReader = new MyBatisPagingItemReaderBuilder<Foo>()
-            .sqlSessionFactory(this.sqlSessionFactory)
-            .queryId("selectFoo")
-            .parameterValues(Collections.singletonMap("id", 1))
-            .build();
-    // @formatter:on
-    itemReader.afterPropertiesSet();
-
-    ExecutionContext executionContext = new ExecutionContext();
-    itemReader.open(executionContext);
-
-    Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo1");
-    Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo2");
-    Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo3");
-
-    itemReader.update(executionContext);
-    Assertions.assertThat(executionContext.getInt("MyBatisPagingItemReader.read.count")).isEqualTo(3);
-    Assertions.assertThat(executionContext.containsKey("MyBatisPagingItemReader.read.count.max")).isFalse();
-
-    Assertions.assertThat(itemReader.read()).isNull();
-  }
-
-  @Test
-  void testConfigurationSaveStateIsFalse() throws Exception {
-    // @formatter:off
-    MyBatisPagingItemReader<Foo> itemReader = new MyBatisPagingItemReaderBuilder<Foo>()
-            .sqlSessionFactory(this.sqlSessionFactory)
-            .queryId("selectFoo")
-            .parameterValues(Collections.singletonMap("id", 1))
-            .saveState(false)
-            .build();
-    // @formatter:on
-    itemReader.afterPropertiesSet();
-
-    ExecutionContext executionContext = new ExecutionContext();
-    itemReader.open(executionContext);
-
-    Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo1");
-    Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo2");
-    Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo3");
-
-    itemReader.update(executionContext);
-    Assertions.assertThat(executionContext.isEmpty()).isTrue();
-  }
-
-  @Test
-  void testConfigurationMaxItemCount() throws Exception {
-    // @formatter:off
-    MyBatisPagingItemReader<Foo> itemReader = new MyBatisPagingItemReaderBuilder<Foo>()
-            .sqlSessionFactory(this.sqlSessionFactory)
-            .queryId("selectFoo")
-            .parameterValues(Collections.singletonMap("id", 1))
-            .maxItemCount(2)
-            .build();
-    // @formatter:on
-    itemReader.afterPropertiesSet();
-
-    ExecutionContext executionContext = new ExecutionContext();
-    itemReader.open(executionContext);
-
-    Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo1");
-    Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo2");
-
-    itemReader.update(executionContext);
-    Assertions.assertThat(executionContext.getInt("MyBatisPagingItemReader.read.count.max")).isEqualTo(2);
-
-    Assertions.assertThat(itemReader.read()).isNull();
-  }
-
-  @Test
-  void testConfigurationPageSize() throws Exception {
-    // @formatter:off
-    MyBatisPagingItemReader<Foo> itemReader = new MyBatisPagingItemReaderBuilder<Foo>()
-            .sqlSessionFactory(this.sqlSessionFactory)
-            .queryId("selectFoo")
-            .parameterValues(Collections.singletonMap("id", 1))
-            .pageSize(2)
-            .build();
-    // @formatter:on
-    itemReader.afterPropertiesSet();
-
-    Map<String, Object> parameters = new HashMap<>();
-    parameters.put("id", 1);
-    parameters.put("_page", 0);
-    parameters.put("_pagesize", 2);
-    parameters.put("_skiprows", 0);
-    Mockito.when(this.sqlSession.selectList("selectFoo", parameters)).thenReturn(getFoos());
-
-    ExecutionContext executionContext = new ExecutionContext();
-    itemReader.open(executionContext);
-
-    Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo1");
-    Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo2");
-    Assertions.assertThat(itemReader.read()).isNull();
-  }
-
-  private List<Object> getFoos() {
-    return Arrays.asList(new Foo("foo1"), new Foo("foo2"), new Foo("foo3"));
-  }
-
-  private static class Foo {
-    private final String name;
-
-    Foo(String name) {
-      this.name = name;
+        Configuration configuration = new Configuration();
+        Environment environment = new Environment("unittest", new JdbcTransactionFactory(), dataSource);
+        configuration.setEnvironment(environment);
+        Mockito.when(this.sqlSessionFactory.getConfiguration()).thenReturn(configuration);
+        Mockito.when(this.sqlSessionFactory.openSession(ExecutorType.BATCH)).thenReturn(this.sqlSession);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", 1);
+        parameters.put("_page", 0);
+        parameters.put("_pagesize", 10);
+        parameters.put("_skiprows", 0);
+        Mockito.when(this.sqlSession.selectList("selectFoo", parameters)).thenReturn(getFoos());
     }
 
-    public String getName() {
-      return this.name;
+    @Test
+    void testConfiguration() throws Exception {
+        // @formatter:off
+        MyBatisPagingItemReader<Foo> itemReader = new MyBatisPagingItemReaderBuilder<Foo>()
+                .sqlSessionFactory(this.sqlSessionFactory)
+                .queryId("selectFoo")
+                .parameterValues(Collections.singletonMap("id", 1))
+                .build();
+        // @formatter:on
+        itemReader.afterPropertiesSet();
+
+        ExecutionContext executionContext = new ExecutionContext();
+        itemReader.open(executionContext);
+
+        Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo1");
+        Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo2");
+        Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo3");
+
+        itemReader.update(executionContext);
+        Assertions.assertThat(executionContext.getInt("MyBatisPagingItemReader.read.count")).isEqualTo(3);
+        Assertions.assertThat(executionContext.containsKey("MyBatisPagingItemReader.read.count.max")).isFalse();
+
+        Assertions.assertThat(itemReader.read()).isNull();
     }
-  }
+
+    @Test
+    void testConfigurationSaveStateIsFalse() throws Exception {
+        // @formatter:off
+        MyBatisPagingItemReader<Foo> itemReader = new MyBatisPagingItemReaderBuilder<Foo>()
+                .sqlSessionFactory(this.sqlSessionFactory)
+                .queryId("selectFoo")
+                .parameterValues(Collections.singletonMap("id", 1))
+                .saveState(false)
+                .build();
+        // @formatter:on
+        itemReader.afterPropertiesSet();
+
+        ExecutionContext executionContext = new ExecutionContext();
+        itemReader.open(executionContext);
+
+        Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo1");
+        Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo2");
+        Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo3");
+
+        itemReader.update(executionContext);
+        Assertions.assertThat(executionContext.isEmpty()).isTrue();
+    }
+
+    @Test
+    void testConfigurationMaxItemCount() throws Exception {
+        // @formatter:off
+        MyBatisPagingItemReader<Foo> itemReader = new MyBatisPagingItemReaderBuilder<Foo>()
+                .sqlSessionFactory(this.sqlSessionFactory)
+                .queryId("selectFoo")
+                .parameterValues(Collections.singletonMap("id", 1))
+                .maxItemCount(2)
+                .build();
+        // @formatter:on
+        itemReader.afterPropertiesSet();
+
+        ExecutionContext executionContext = new ExecutionContext();
+        itemReader.open(executionContext);
+
+        Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo1");
+        Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo2");
+
+        itemReader.update(executionContext);
+        Assertions.assertThat(executionContext.getInt("MyBatisPagingItemReader.read.count.max")).isEqualTo(2);
+
+        Assertions.assertThat(itemReader.read()).isNull();
+    }
+
+    @Test
+    void testConfigurationPageSize() throws Exception {
+        // @formatter:off
+        MyBatisPagingItemReader<Foo> itemReader = new MyBatisPagingItemReaderBuilder<Foo>()
+                .sqlSessionFactory(this.sqlSessionFactory)
+                .queryId("selectFoo")
+                .parameterValues(Collections.singletonMap("id", 1))
+                .pageSize(2)
+                .build();
+        // @formatter:on
+        itemReader.afterPropertiesSet();
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", 1);
+        parameters.put("_page", 0);
+        parameters.put("_pagesize", 2);
+        parameters.put("_skiprows", 0);
+        Mockito.when(this.sqlSession.selectList("selectFoo", parameters)).thenReturn(getFoos());
+
+        ExecutionContext executionContext = new ExecutionContext();
+        itemReader.open(executionContext);
+
+        Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo1");
+        Assertions.assertThat(itemReader.read()).extracting(Foo::getName).isEqualTo("foo2");
+        Assertions.assertThat(itemReader.read()).isNull();
+    }
+
+    private List<Object> getFoos() {
+        return Arrays.asList(new Foo("foo1"), new Foo("foo2"), new Foo("foo3"));
+    }
+
+    private static class Foo {
+        private final String name;
+
+        Foo(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+    }
 
 }

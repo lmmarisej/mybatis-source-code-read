@@ -23,17 +23,17 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-  <context:property-placeholder location="classpath:/org/mybatis/spring/config/default-scope.properties"/>
+    <context:property-placeholder location="classpath:/org/mybatis/spring/config/default-scope.properties"/>
 
-  <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
-    <property name="scopes">
-      <map>
-        <entry key="thread">
-          <bean class="org.springframework.context.support.SimpleThreadScope"/>
-        </entry>
-      </map>
-    </property>
-  </bean>
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+        <property name="scopes">
+            <map>
+                <entry key="thread">
+                    <bean class="org.springframework.context.support.SimpleThreadScope"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
 
-  <mybatis:scan base-package="org.mybatis.spring.mapper" default-scope="${mybatis.default-scope:}" />
+    <mybatis:scan base-package="org.mybatis.spring.mapper" default-scope="${mybatis.default-scope:}"/>
 </beans>

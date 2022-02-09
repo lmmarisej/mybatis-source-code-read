@@ -16,7 +16,7 @@
 package org.mybatis.spring.annotation.mapper.ds1;
 
 public interface Ds1Mapper {
-  default String test() {
-    return "ds1";
-  }
+    default String test() {
+        return "ds1";
+    }
 }

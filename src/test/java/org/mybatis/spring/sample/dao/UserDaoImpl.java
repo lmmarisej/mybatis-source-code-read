@@ -25,9 +25,9 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
  */
 public class UserDaoImpl extends SqlSessionDaoSupport implements UserDao {
 
-  @Override
-  public User getUser(String userId) {
-    return getSqlSession().selectOne("org.mybatis.spring.sample.mapper.UserMapper.getUser", userId);
-  }
+    @Override
+    public User getUser(String userId) {
+        return getSqlSession().selectOne("org.mybatis.spring.sample.mapper.UserMapper.getUser", userId);
+    }
 
 }
