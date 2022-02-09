@@ -37,6 +37,10 @@ import java.util.List;
 
 /**
  * @author Jeff Butler
+ *
+ * 批量执行SQL避免多次建立网络通信。
+ *
+ * BatchExecutor将连续相同模式的SQL语句添加到同一个Statement对象中，有效减少编译操作的次数。
  */
 public class BatchExecutor extends BaseExecutor {
 
@@ -108,6 +112,7 @@ public class BatchExecutor extends BaseExecutor {
         return cursor;
     }
 
+    // 批处理SQL语句
     @Override
     public List<BatchResult> doFlushStatements(boolean isRollback) throws SQLException {
         try {

@@ -34,15 +34,18 @@ import java.util.Set;
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
+ *
+ * 保存在某个SQLSession的某个事务中需要向某个二级缓存中添加的缓存数据。
  */
 public class TransactionalCache implements Cache {
 
     private static final Log log = LogFactory.getLog(TransactionalCache.class);
 
-    private final Cache delegate;
-    private boolean clearOnCommit;
-    private final Map<Object, Object> entriesToAddOnCommit;
-    private final Set<Object> entriesMissedInCache;
+    private final Cache delegate;       // 二级缓存对应的Cache对象
+    private boolean clearOnCommit;      // true表示当前TransactionalCache不可查询，提交事务时会将delegate清空
+    private final Map<Object, Object> entriesToAddOnCommit;     // 记录事务提交前的结果，事务提交时将这些结果添加到二级缓存
+    // 主要针对BlockingCache装饰器，在缓存未命中的情况下也能在提交或回滚时调用delegate.putObject(entry, null)，保证BlockingCache#releaseLock的调用，释放锁
+    private final Set<Object> entriesMissedInCache;     // 记录缓存未命中的cacheKey
 
     public TransactionalCache(Cache delegate) {
         this.delegate = delegate;
@@ -64,9 +67,9 @@ public class TransactionalCache implements Cache {
     @Override
     public Object getObject(Object key) {
         // issue #116
-        Object object = delegate.getObject(key);
+        Object object = delegate.getObject(key);        // 底层缓存中查询
         if (object == null) {
-            entriesMissedInCache.add(key);
+            entriesMissedInCache.add(key);      // 记录缓存未命中的key
         }
         // issue #146
         if (clearOnCommit) {
@@ -78,7 +81,7 @@ public class TransactionalCache implements Cache {
 
     @Override
     public void putObject(Object key, Object object) {
-        entriesToAddOnCommit.put(key, object);
+        entriesToAddOnCommit.put(key, object);      // 事务还未提交，将其缓存在此
     }
 
     @Override
@@ -97,7 +100,7 @@ public class TransactionalCache implements Cache {
             delegate.clear();
         }
         flushPendingEntries();
-        reset();
+        reset();        // 缓存设置为不可用
     }
 
     public void rollback() {
@@ -111,13 +114,16 @@ public class TransactionalCache implements Cache {
         entriesMissedInCache.clear();
     }
 
+    // 事物提交和回滚时调用
     private void flushPendingEntries() {
+        // 加入二级缓存
         for (Map.Entry<Object, Object> entry : entriesToAddOnCommit.entrySet()) {
             delegate.putObject(entry.getKey(), entry.getValue());
         }
+        // 将未命中的缓存加入二级缓存
         for (Object entry : entriesMissedInCache) {
-            if (!entriesToAddOnCommit.containsKey(entry)) {
-                delegate.putObject(entry, null);
+            if (!entriesToAddOnCommit.containsKey(entry)) {     // 在这个事务中，该key始终没有缓存命中
+                delegate.putObject(entry, null);        // BlockingCache在读缓存时加锁，在缓存未命中时（null）始终不释放锁，这里保证putObject的调用，从而保证锁的释放
             }
         }
     }

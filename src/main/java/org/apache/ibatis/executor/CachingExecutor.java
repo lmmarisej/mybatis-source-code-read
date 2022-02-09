@@ -31,11 +31,17 @@ import java.util.List;
 /**
  * @author Clinton Begin
  * @author Eduardo Macarron
+ *
+ * 为Executor添加了二级缓存的功能。
+ *
+ * 二级缓存是SqlSessionFactory级别的缓存，同一个SqlSessionFactory产生的SqlSession都共享一个二级缓存，二级缓存中存储的是数据，当命中二级缓存时，通过存储的数据构造对象返回。
+ *
+ * 查询数据的时候，查询的流程是二级缓存>一级缓存>数据库。
  */
 public class CachingExecutor implements Executor {
 
-    private final Executor delegate;
-    private final TransactionalCacheManager tcm = new TransactionalCacheManager();
+    private final Executor delegate;        // 用于执行数据库操作
+    private final TransactionalCacheManager tcm = new TransactionalCacheManager();      // 用于管理缓存
 
     public CachingExecutor(Executor delegate) {
         this.delegate = delegate;
@@ -80,7 +86,7 @@ public class CachingExecutor implements Executor {
 
     @Override
     public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException {
-        BoundSql boundSql = ms.getBoundSql(parameterObject);
+        BoundSql boundSql = ms.getBoundSql(parameterObject);        // 创建查询语句对应的BoundSql
         CacheKey key = createCacheKey(ms, parameterObject, rowBounds, boundSql);
         return query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
     }
@@ -88,15 +94,17 @@ public class CachingExecutor implements Executor {
     @Override
     public <E> List<E> query(MappedStatement ms, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, CacheKey key, BoundSql boundSql)
             throws SQLException {
-        Cache cache = ms.getCache();
-        if (cache != null) {
-            flushCacheIfRequired(ms);
+        Cache cache = ms.getCache();        // 查询语句所在命名空间对应的二级缓存
+        if (cache != null) {        // 是否开启缓存
+            flushCacheIfRequired(ms);       // select节点配置，决定是否清空二级缓存
             if (ms.isUseCache() && resultHandler == null) {
-                ensureNoOutParams(ms, boundSql);
+                ensureNoOutParams(ms, boundSql);        // 二级缓存不保存输出类型的参数，查询调用了有输出参数的存储过程，报错
                 @SuppressWarnings("unchecked")
-                List<E> list = (List<E>) tcm.getObject(cache, key);
+                List<E> list = (List<E>) tcm.getObject(cache, key);     // 查询二级缓存
                 if (list == null) {
+                    // 先查一级缓存
                     list = delegate.query(ms, parameterObject, rowBounds, resultHandler, key, boundSql);
+                    // 查询结果加入二级缓存
                     tcm.putObject(cache, key, list); // issue #578 and #116
                 }
                 return list;

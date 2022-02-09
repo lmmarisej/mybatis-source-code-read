@@ -29,36 +29,43 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ *
+ * 定义了数据库操作的基本方法。
  */
 public interface Executor {
 
     ResultHandler NO_RESULT_HANDLER = null;
 
+    // 执行非查询的SQL
     int update(MappedStatement ms, Object parameter) throws SQLException;
 
+    // 执行查询类SQL，返回值为对象列表或游标
     <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, CacheKey cacheKey, BoundSql boundSql) throws SQLException;
 
     <E> List<E> query(MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler) throws SQLException;
 
     <E> Cursor<E> queryCursor(MappedStatement ms, Object parameter, RowBounds rowBounds) throws SQLException;
 
+    // 批量执行SQL语句
     List<BatchResult> flushStatements() throws SQLException;
 
+    // 提交事务
     void commit(boolean required) throws SQLException;
 
+    // 回滚事务
     void rollback(boolean required) throws SQLException;
 
     CacheKey createCacheKey(MappedStatement ms, Object parameterObject, RowBounds rowBounds, BoundSql boundSql);
 
     boolean isCached(MappedStatement ms, CacheKey key);
 
-    void clearLocalCache();
+    void clearLocalCache();     // 清空一级缓存
 
     void deferLoad(MappedStatement ms, MetaObject resultObject, String property, CacheKey key, Class<?> targetType);
 
-    Transaction getTransaction();
+    Transaction getTransaction();       // 获取事务对象
 
-    void close(boolean forceRollback);
+    void close(boolean forceRollback);      // 关闭Executor，一级缓存将不可用
 
     boolean isClosed();
 

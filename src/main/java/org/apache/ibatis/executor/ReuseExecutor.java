@@ -35,6 +35,8 @@ import java.util.Map;
 
 /**
  * @author Clinton Begin
+ *
+ * 重用Statement，减少SQL预编译开销和创建销毁Statement对象的开销。
  */
 public class ReuseExecutor extends BaseExecutor {
 

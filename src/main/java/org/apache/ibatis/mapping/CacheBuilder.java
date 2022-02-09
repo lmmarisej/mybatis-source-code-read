@@ -129,7 +129,7 @@ public class CacheBuilder {
             }
             // 添加两个装饰器
             cache = new LoggingCache(cache);
-            cache = new SynchronizedCache(cache);
+            cache = new SynchronizedCache(cache);       // 这个装饰器保证缓存的线程安全
             if (blocking) {     // 需要对一个缓存key的读做线程互斥
                 cache = new BlockingCache(cache);
             }

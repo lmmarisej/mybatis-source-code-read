@@ -32,6 +32,8 @@ import java.util.Map;
  * Can also have additional parameters that are created by the dynamic language (for loops, bind...).
  *
  * @author Clinton Begin
+ *
+ * SQL以及相应参数。
  */
 public class BoundSql {
 

@@ -40,6 +40,8 @@ import java.util.*;
 /**
  * @author Clinton Begin
  * @author Franta Mejta
+ *
+ * 提供增删loaderMap集合项的相关方法。
  */
 public class ResultLoaderMap {
 
@@ -74,7 +76,7 @@ public class ResultLoaderMap {
     public boolean load(String property) throws SQLException {
         LoadPair pair = loaderMap.remove(property.toUpperCase(Locale.ENGLISH));
         if (pair != null) {
-            pair.load();
+            pair.load();        // 执行延迟加载
             return true;
         }
         return false;
@@ -118,7 +120,7 @@ public class ResultLoaderMap {
         /**
          * Result loader which loads unread properties.
          */
-        private transient ResultLoader resultLoader;
+        private transient ResultLoader resultLoader;        // 负责加载延迟加载属性的ResultLoader对象
         /**
          * Wow, logger.
          */
@@ -130,11 +132,11 @@ public class ResultLoaderMap {
         /**
          * Name of the unread property.
          */
-        private String property;
+        private String property;            // 延迟加载的属性名称
         /**
          * ID of SQL statement which loads the property.
          */
-        private String mappedStatement;
+        private String mappedStatement;     // 用于加载SQL语句属性的id
         /**
          * Parameter of the sql statement.
          */

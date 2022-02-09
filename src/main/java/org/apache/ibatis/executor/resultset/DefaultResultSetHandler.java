@@ -291,7 +291,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
             }
         } finally {
             // issue #228 (close resultsets)
-            closeResultSet(rsw.getResultSet());
+            closeResultSet(rsw.getResultSet());     // 关闭结果集
         }
     }
 
@@ -747,12 +747,14 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     private Object getNestedQueryConstructorValue(ResultSet rs, ResultMapping constructorMapping, String columnPrefix) throws SQLException {
         final String nestedQueryId = constructorMapping.getNestedQueryId();
         final MappedStatement nestedQuery = configuration.getMappedStatement(nestedQueryId);
+        // 获取传递给嵌套查询的参数值
         final Class<?> nestedQueryParameterType = nestedQuery.getParameterMap().getType();
         final Object nestedQueryParameterObject = prepareParameterForNestedQuery(rs, constructorMapping, nestedQueryParameterType, columnPrefix);
         Object value = null;
         if (nestedQueryParameterObject != null) {
             final BoundSql nestedBoundSql = nestedQuery.getBoundSql(nestedQueryParameterObject);
             final CacheKey key = executor.createCacheKey(nestedQuery, nestedQueryParameterObject, RowBounds.DEFAULT, nestedBoundSql);
+            // 获取嵌套查询结果集经过映射后的目标类型
             final Class<?> targetType = constructorMapping.getJavaType();
             final ResultLoader resultLoader = new ResultLoader(configuration, executor, nestedQuery, nestedQueryParameterObject, targetType, key, nestedBoundSql);
             value = resultLoader.loadResult();

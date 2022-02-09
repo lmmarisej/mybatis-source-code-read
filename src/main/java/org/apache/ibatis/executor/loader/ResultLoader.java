@@ -35,19 +35,21 @@ import java.util.List;
 
 /**
  * @author Clinton Begin
+ *
+ * 保存一次延迟加载操作所需的全部信息。
  */
 public class ResultLoader {
 
     protected final Configuration configuration;
-    protected final Executor executor;
+    protected final Executor executor;      // 用于执行延迟加载操作的Executor对象
     protected final MappedStatement mappedStatement;
-    protected final Object parameterObject;
-    protected final Class<?> targetType;
+    protected final Object parameterObject;     // 记录延迟执行的SQL语句的实参
+    protected final Class<?> targetType;        // 记录延迟加载得到的对象类型
     protected final ObjectFactory objectFactory;
-    protected final CacheKey cacheKey;
-    protected final BoundSql boundSql;
-    protected final ResultExtractor resultExtractor;
-    protected final long creatorThreadId;
+    protected final CacheKey cacheKey;      // cacheKey对象
+    protected final BoundSql boundSql;          // 记录延迟执行的SQL语句以及相关配置信息
+    protected final ResultExtractor resultExtractor;    // 负责将延迟加载得到的对象转化为targetType
+    protected final long creatorThreadId;       // 创建ResultLoader的线程id
 
     protected boolean loaded;
     protected Object resultObject;
@@ -62,21 +64,26 @@ public class ResultLoader {
         this.cacheKey = cacheKey;
         this.boundSql = boundSql;
         this.resultExtractor = new ResultExtractor(configuration, objectFactory);
-        this.creatorThreadId = Thread.currentThread().getId();
+        this.creatorThreadId = Thread.currentThread().getId();      // 记录创建ResultLoader的线程id
     }
 
     public Object loadResult() throws SQLException {
+        // 执行延迟加载，得到结果对象，以list形式返回
         List<Object> list = selectList();
+        // 将list集合转换为targetType指定类型的对象
         resultObject = resultExtractor.extractObjectFromList(list, targetType);
         return resultObject;
     }
 
+    // 完成延迟加载操作
     private <E> List<E> selectList() throws SQLException {
-        Executor localExecutor = executor;
+        Executor localExecutor = executor;      // 记录执行延迟加载的executor对象
+        // 检测调用该方法的线程是否为创建ResultLoader的线程
         if (Thread.currentThread().getId() != this.creatorThreadId || localExecutor.isClosed()) {
             localExecutor = newExecutor();
         }
         try {
+            // 执行查询操作，得到延迟加载的对象
             return localExecutor.query(mappedStatement, parameterObject, RowBounds.DEFAULT, Executor.NO_RESULT_HANDLER, cacheKey, boundSql);
         } finally {
             if (localExecutor != executor) {
