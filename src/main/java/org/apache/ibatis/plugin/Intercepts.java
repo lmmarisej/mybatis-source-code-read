@@ -38,6 +38,8 @@ import java.lang.annotation.*;
  * </pre>
  *
  * @author Clinton Begin
+ *
+ * 用来指定Signature列表，定义拦截规则。
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

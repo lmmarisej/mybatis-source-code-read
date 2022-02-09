@@ -25,6 +25,8 @@ import java.lang.annotation.Target;
  *
  * @author Clinton Begin
  * @see Intercepts
+ *
+ * 标注该插件需要拦截的方法信息。
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -34,6 +36,8 @@ public @interface Signature {
      * Returns the java type.
      *
      * @return the java type
+     *
+     * 需要拦截方法的返回值类型。
      */
     Class<?> type();
 
@@ -41,6 +45,8 @@ public @interface Signature {
      * Returns the method name.
      *
      * @return the method name
+     *
+     * 被拦截方法的方法名。
      */
     String method();
 
@@ -48,6 +54,8 @@ public @interface Signature {
      * Returns java types for method argument.
      *
      * @return java types for method argument
+     *
+     * 被拦截方法的参数列表类型。
      */
     Class<?>[] args();
 }

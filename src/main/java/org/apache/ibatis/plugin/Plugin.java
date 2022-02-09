@@ -28,12 +28,14 @@ import java.util.Set;
 
 /**
  * @author Clinton Begin
+ *
+ * 封装解析拦截器配置，利用JDK动态代理为目标对象生成代理对象。
  */
 public class Plugin implements InvocationHandler {
 
     private final Object target;
     private final Interceptor interceptor;
-    private final Map<Class<?>, Set<Method>> signatureMap;
+    private final Map<Class<?>, Set<Method>> signatureMap;      // 指定类上配置的@Signature信息
 
     private Plugin(Object target, Interceptor interceptor, Map<Class<?>, Set<Method>> signatureMap) {
         this.target = target;
@@ -42,26 +44,37 @@ public class Plugin implements InvocationHandler {
     }
 
     public static Object wrap(Object target, Interceptor interceptor) {
+        // 解析拦截器上的注解配置信息
         Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
         Class<?> type = target.getClass();
+        // 获取被@Signature匹配上方法所在的接口，接口查找范围为代理对象实现的接口中找
         Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
         if (interfaces.length > 0) {
+            // 为这些接口生成代理对象
             return Proxy.newProxyInstance(
                     type.getClassLoader(),
-                    interfaces,
+                    interfaces,     // 需要被代理的接口
+                    // 被代理的接口方法拦截的逻辑
                     new Plugin(target, interceptor, signatureMap));
         }
-        return target;
+        return target;      // 无需代理
     }
 
+    // 方法调用
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         try {
+            // 从方法界别判断当前调用的方法是否需要拦截
+            // 获取被调用的方法所在的拦截器上配置的@Signature信息
             Set<Method> methods = signatureMap.get(method.getDeclaringClass());
+            // 当前调用的方法需要被拦截，通过interceptor.intercept()方法进行拦截处理
             if (methods != null && methods.contains(method)) {
-                return interceptor.intercept(new Invocation(target, method, args));
+                // 用拦截器逻辑包裹调用
+                return interceptor.intercept(
+                        new Invocation(target, method, args)        // 包装方法调用信息
+                );
             }
-            return method.invoke(target, args);
+            return method.invoke(target, args);     // 直接调用
         } catch (Exception e) {
             throw ExceptionUtil.unwrapThrowable(e);
         }

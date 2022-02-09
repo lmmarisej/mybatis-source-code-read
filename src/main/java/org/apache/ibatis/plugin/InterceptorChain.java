@@ -26,9 +26,10 @@ public class InterceptorChain {
 
     private final List<Interceptor> interceptors = new ArrayList<>();
 
+    // 为目标对象创建代理
     public Object pluginAll(Object target) {
         for (Interceptor interceptor : interceptors) {
-            target = interceptor.plugin(target);
+            target = interceptor.plugin(target);        // 为target织入该interceptor中定义的拦截逻辑
         }
         return target;
     }

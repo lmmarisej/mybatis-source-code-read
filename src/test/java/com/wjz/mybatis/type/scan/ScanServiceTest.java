@@ -18,9 +18,9 @@ public class ScanServiceTest {
         for (Class<?> type : handlerSet) {
             // Ignore inner classes and interfaces (including package-info.java) and
             // abstract classes
-            if (!type.isAnonymousClass() && !type.isInterface() && !Modifier.isAbstract(type.getModifiers())) {
+//            if (!type.isAnonymousClass() && !type.isInterface() && !Modifier.isAbstract(type.getModifiers())) {
                 System.out.println(type.getName());
-            }
+//            }
         }
     }
 

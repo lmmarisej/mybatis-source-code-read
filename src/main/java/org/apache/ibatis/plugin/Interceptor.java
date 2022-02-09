@@ -19,15 +19,23 @@ import java.util.Properties;
 
 /**
  * @author Clinton Begin
+ *
+ * Mybatis中的拦截器都需要实现的接口，是插件模块的核心。
+ *
+ * 生效原理：
+ *      Mybatis初始化时，通过XMLConfigBuilder#pluginElement(XNode)解析配置文件中相应的Interceptor对象以及相应的属性。
  */
 public interface Interceptor {
 
+    // 执行拦截逻辑的方法
     Object intercept(Invocation invocation) throws Throwable;
 
+    // 决定是否触发拦截
     default Object plugin(Object target) {
         return Plugin.wrap(target, this);
     }
 
+    // 根据配置初始化Interceptor
     default void setProperties(Properties properties) {
         // NOP
     }
