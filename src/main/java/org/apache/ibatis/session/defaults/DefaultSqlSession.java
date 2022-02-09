@@ -50,8 +50,8 @@ public class DefaultSqlSession implements SqlSession {
     private final Configuration configuration;
     private final Executor executor;
 
-    private final boolean autoCommit;
-    private boolean dirty;
+    private final boolean autoCommit;       // 支持事务或不支持事务，不支持事务为true，支持事务才能手动提交
+    private boolean dirty;      // 当前缓存中是否有脏数据
     private List<Cursor<?>> cursorList;
 
     public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
@@ -258,7 +258,7 @@ public class DefaultSqlSession implements SqlSession {
     public void close() {
         try {
             executor.close(isCommitOrRollbackRequired(false));
-            closeCursors();
+            closeCursors();     // 避免内存泄漏，统一关闭
             dirty = false;
         } finally {
             ErrorContext.instance().reset();
@@ -310,7 +310,8 @@ public class DefaultSqlSession implements SqlSession {
     }
 
     private boolean isCommitOrRollbackRequired(boolean force) {
-        return (!autoCommit && dirty) || force;
+        return (!autoCommit && dirty)       // 手动提交且有脏数据，代表需要提交或回滚数据
+                || force;       // 强制回滚或提交
     }
 
     private Object wrapCollection(final Object object) {

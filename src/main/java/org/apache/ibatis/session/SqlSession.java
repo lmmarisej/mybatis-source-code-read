@@ -29,15 +29,15 @@ import java.util.Map;
  *
  * @author Clinton Begin
  *
- * 负责完成对数据库的操作。
+ * 定义了常用数据库操作以及事务相关的操作。
  */
 public interface SqlSession extends Closeable {
 
     /**
      * Retrieve a single row mapped from the statement key.
      *
-     * @param <T>       the returned object type
-     * @param statement the statement
+     * @param <T>       the returned object type        查询结果对象
+     * @param statement the statement       查询用的SQL语句
      * @return Mapped object
      */
     <T> T selectOne(String statement);
@@ -47,7 +47,7 @@ public interface SqlSession extends Closeable {
      *
      * @param <T>       the returned object type
      * @param statement Unique identifier matching the statement to use.    SQL语句的id
-     * @param parameter A parameter object to pass to the statement.    参数
+     * @param parameter A parameter object to pass to the statement.    需要用户传入的SQL语句的实参
      * @return Mapped object
      */
     <T> T selectOne(String statement, Object parameter);
@@ -57,7 +57,7 @@ public interface SqlSession extends Closeable {
      *
      * @param <E>       the returned list element type
      * @param statement Unique identifier matching the statement to use.
-     * @return List of mapped object
+     * @return List of mapped object        查询结果的多条记录封装为集合返回
      */
     <E> List<E> selectList(String statement);
 
@@ -92,8 +92,8 @@ public interface SqlSession extends Closeable {
      * @param <K>       the returned Map keys type
      * @param <V>       the returned Map values type
      * @param statement Unique identifier matching the statement to use.
-     * @param mapKey    The property to use as key for each value in the list.
-     * @return Map containing key pair data.
+     * @param mapKey    The property to use as key for each value in the list.      指定结果集那一列作为Map的key
+     * @return Map containing key pair data.        结果集映射为Map返回
      */
     <K, V> Map<K, V> selectMap(String statement, String mapKey);
 
@@ -131,7 +131,7 @@ public interface SqlSession extends Closeable {
      *
      * @param <T>       the returned cursor element type.
      * @param statement Unique identifier matching the statement to use.
-     * @return Cursor of mapped objects
+     * @return Cursor of mapped objects     游标对象
      */
     <T> Cursor<T> selectCursor(String statement);
 
@@ -162,7 +162,7 @@ public interface SqlSession extends Closeable {
      *
      * @param statement Unique identifier matching the statement to use.
      * @param parameter A parameter object to pass to the statement.
-     * @param handler   ResultHandler that will handle each retrieved row
+     * @param handler   ResultHandler that will handle each retrieved row       处理查询结果对象
      */
     void select(String statement, Object parameter, ResultHandler handler);
 
@@ -269,7 +269,7 @@ public interface SqlSession extends Closeable {
     void rollback(boolean force);
 
     /**
-     * Flushes batch statements.
+     * Flushes batch statements.        将请求刷新到数据库
      *
      * @return BatchResult list of updated records
      * @since 3.0.6
@@ -295,7 +295,7 @@ public interface SqlSession extends Closeable {
     Configuration getConfiguration();
 
     /**
-     * Retrieves a mapper.
+     * Retrieves a mapper.      为指定的type创建mapper对象，可以使用mapper进行增删改查。
      *
      * @param <T>  the mapper type
      * @param type Mapper interface class
@@ -306,7 +306,7 @@ public interface SqlSession extends Closeable {
     <T> T getMapper(Class<T> type);
 
     /**
-     * Retrieves inner database connection.
+     * Retrieves inner database connection.     获取该SqlSession对应的数据库连接。
      *
      * @return Connection
      */

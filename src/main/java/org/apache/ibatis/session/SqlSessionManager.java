@@ -31,13 +31,15 @@ import java.util.Properties;
 
 /**
  * @author Larry Meadors
+ *
+ * 同时提供SqlSession创建以及SqlSession操纵数据库的功能。
  */
 public class SqlSessionManager implements SqlSessionFactory, SqlSession {
 
     private final SqlSessionFactory sqlSessionFactory;
     private final SqlSession sqlSessionProxy;
 
-    private final ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<>();
+    private final ThreadLocal<SqlSession> localSqlSession = new ThreadLocal<>();        // SqlSession与当前线程绑定
 
     private SqlSessionManager(SqlSessionFactory sqlSessionFactory) {
         this.sqlSessionFactory = sqlSessionFactory;
@@ -342,23 +344,25 @@ public class SqlSessionManager implements SqlSessionFactory, SqlSession {
             // Prevent Synthetic Access
         }
 
+        // 拦截方法调用，为代理对象方法调用设置执行SQL需要用到的数据库操作对象sqlSession
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             final SqlSession sqlSession = SqlSessionManager.this.localSqlSession.get();
             if (sqlSession != null) {
                 try {
-                    return method.invoke(sqlSession, args);
+                    return method.invoke(sqlSession, args);     // 调用真正的sqlSession，完成数据库操作
                 } catch (Throwable t) {
                     throw ExceptionUtil.unwrapThrowable(t);
                 }
             } else {
+                // 创建新的SqlSession
                 try (SqlSession autoSqlSession = openSession()) {
                     try {
                         final Object result = method.invoke(autoSqlSession, args);
                         autoSqlSession.commit();
                         return result;
                     } catch (Throwable t) {
-                        autoSqlSession.rollback();
+                        autoSqlSession.rollback();      // 回滚，但真正是否会回滚会根据配置文件决定
                         throw ExceptionUtil.unwrapThrowable(t);
                     }
                 }

@@ -83,15 +83,17 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
         return configuration;
     }
 
+    // 通过数据源获取数据库连接对象创建Executor对象以及DefaultSqlSession
     private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
         Transaction tx = null;
         try {
-            final Environment environment = configuration.getEnvironment();
+            final Environment environment = configuration.getEnvironment(); // 从配置文件中获取Environment
             final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
-            tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);
-            final Executor executor = configuration.newExecutor(tx, execType);
-            return new DefaultSqlSession(configuration, executor, autoCommit);
+            tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit); // 创建transaction
+            final Executor executor = configuration.newExecutor(tx, execType);      // 根据配置创建executor
+            return new DefaultSqlSession(configuration, executor, autoCommit);      // 创建SqlSession
         } catch (Exception e) {
+            // 关闭Transaction
             closeTransaction(tx); // may have fetched a connection so lets call close()
             throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
         } finally {
@@ -99,6 +101,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
         }
     }
 
+    // 使用用户提供的数据库连接对象创建Executor对象以及DefaultSqlSession
     private SqlSession openSessionFromConnection(ExecutorType execType, Connection connection) {
         try {
             boolean autoCommit;
@@ -107,7 +110,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
             } catch (SQLException e) {
                 // Failover to true, as most poor drivers
                 // or databases won't support transactions
-                autoCommit = true;
+                autoCommit = true;      // 不支持事物
             }
             final Environment environment = configuration.getEnvironment();
             final TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);
